@@ -1,0 +1,129 @@
+/*
+File
+https://github.com/virtualdogbert/GroovyConfigWriter/blob/master/build.gradle
+has been used as basis for this file.
+ */
+plugins {
+    id "groovy"
+    id "maven-publish"
+    id "idea"
+    id "jacoco"
+    id "org.springframework.boot" version "2.1.1.RELEASE"
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+    id "enterprise.groovy.plugin" version "1.0.4"
+}
+
+apply plugin: 'com.jfrog.bintray'
+
+
+bootJar {
+    baseName = 'orbit-app'
+    version = '1.0.0'
+}
+
+ext['groovy.version'] = '2.5.4'
+ext['springBootVersion'] = '2.1.1.RELEASE'
+sourceCompatibility = 1.8
+group = "io.i-t"
+version = "1.0.0"
+description = "Microservices"
+
+repositories {
+    jcenter()
+    maven {
+        url  "https://dl.bintray.com/infinite-technology/io.i-t"
+    }
+}
+
+sourceSets {
+    main.groovy.srcDirs = ["src/main/groovy"]
+    test.groovy.srcDirs = ["src/test/groovy"]
+}
+
+dependencies {
+    compile project(':orbit-lib')
+    compile 'org.springframework.boot:spring-boot-starter-data-rest'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.8'
+    compile 'io.i-t:ascend-lib:0.1.6'
+    compile group: 'com.sun.mail', name: 'javax.mail', version: '1.6.0'
+    compile group: "com.twilio.sdk", name: "twilio", version: "7.42.0"
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.1.7.RELEASE'
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier "sources"
+}
+
+ext {
+    theTitle = "Cloud Processing"
+    titleForDocumentation = archivesBaseName + " " + version
+    packageTitle = group
+    description = "Cloud Processing"
+}
+
+publishing {
+    publications {
+        groovyMaven(MavenPublication) {
+            from components.java
+            artifact(sourceJar) {
+                classifier "sources"
+            }
+        }
+    }
+}
+
+task jarSrc(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives(jarSrc)
+}
+
+bintray {
+    user = System.getenv("bintrayuser")
+    key = System.getenv("bintraypassword")
+    System.out.println(user)
+    System.out.println(key)
+    publications = ["groovyMaven"]
+    def projectName = project.name
+    def projectDescription = project.description
+    pkg {
+        userOrg = "infinite-technology"
+        repo = "io.i-t"
+        name = "orbit-app"
+        desc = "Microservices"
+        issueTrackerUrl = "https://github.com/INFINITE-TECHNOLOGY/ORBIT/issues"
+        vcsUrl = "https://github.com/INFINITE-TECHNOLOGY/ORBIT.git"
+        websiteUrl = "https://i-t.io/Orbit/"
+        licenses = ["Apache-2.0"]
+    }
+}
+
+configurations {
+    providedRuntime
+    compile.exclude(group: 'ch.qos.logback')
+}
+
+task copyConf(type: Copy, dependsOn: [jar]) {
+    from "src/main/resources/"
+    into "build/conf"
+    include "Orbit.json"
+}
+
+task stage(dependsOn: ['build', 'clean'])
+stage.dependsOn(copyConf)
+build.mustRunAfter clean
+
+configurations {
+    providedRuntime
+    compile.exclude(group: 'ch.qos.logback')
+}
+
+dependencyManagement {
+    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+}

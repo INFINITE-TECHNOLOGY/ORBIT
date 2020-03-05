@@ -1,0 +1,91 @@
+/*
+File
+https://github.com/virtualdogbert/GroovyConfigWriter/blob/master/build.gradle
+has been used as basis for this file.
+ */
+plugins {
+    id "groovy"
+    id "maven-publish"
+    id "idea"
+    id "jacoco"
+    id "enterprise.groovy.plugin" version "1.0.4"
+}
+
+apply plugin: 'com.jfrog.bintray'
+
+ext['groovy.version'] = '2.5.4'
+
+sourceCompatibility = 1.8
+group = "io.i-t"
+version = "1.0.0"
+description = "Microservices"
+
+repositories {
+    jcenter()
+    maven {
+        url  "https://dl.bintray.com/infinite-technology/io.i-t"
+    }
+}
+
+sourceSets {
+    main.groovy.srcDirs = ["src/main/groovy"]
+    test.groovy.srcDirs = ["src/test/groovy"]
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.5.4'
+    compile "io.i-t:bobbin:3.0.0"
+    compile 'io.i-t:blackbox:1.0.21'
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier "sources"
+}
+
+ext {
+    theTitle = "Microservices"
+    titleForDocumentation = archivesBaseName + " " + version
+    packageTitle = group
+    description = "Microservices"
+}
+
+publishing {
+    publications {
+        groovyMaven(MavenPublication) {
+            from components.java
+            artifact(sourceJar) {
+                classifier "sources"
+            }
+        }
+    }
+}
+
+task jarSrc(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives(jarSrc)
+}
+
+bintray {
+    user = System.getenv("bintrayuser")
+    key = System.getenv("bintraypassword")
+    System.out.println(user)
+    System.out.println(key)
+    publications = ["groovyMaven"]
+    def projectName = project.name
+    def projectDescription = project.description
+    pkg {
+        userOrg = "infinite-technology"
+        repo = "io.i-t"
+        name = "orbit-lib"
+        desc = "Microservices"
+        issueTrackerUrl = "https://github.com/INFINITE-TECHNOLOGY/ORBIT/issues"
+        vcsUrl = "https://github.com/INFINITE-TECHNOLOGY/ORBIT.git"
+        websiteUrl = "https://i-t.io/Orbit/"
+        licenses = ["Apache-2.0"]
+    }
+}
