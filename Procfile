@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT $JAVA_OPTS -jar "orbit-app/build/libs/orbit-app-0.0.13.jar"
+web: java -Dserver.port=$PORT $JAVA_OPTS -jar "orbit-app/build/libs/orbit-app-1.0.0.jar"
