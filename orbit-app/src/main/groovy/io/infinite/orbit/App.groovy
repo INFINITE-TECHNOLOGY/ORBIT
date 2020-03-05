@@ -19,15 +19,8 @@ class App implements CommandLineRunner {
     }
 
     @Override
-    void run(String... args) throws Exception {
-        runWithLogging()
-    }
-
     @BlackBox
-    void runWithLogging() {
-        if (System.getenv("ASCEND_TRUSTED_URL") == null) {
-            throw new OrbitException("ASCEND_TRUSTED_URL not set in Environment Variables")
-        }
+    void run(String... args) throws Exception {
         log.debug("Started Orbit.")
     }
 
