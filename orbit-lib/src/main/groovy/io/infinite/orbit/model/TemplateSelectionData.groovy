@@ -1,6 +1,6 @@
 package io.infinite.orbit.model
 
-class TemplateSelector {
+class TemplateSelectionData {
 
     String language
 

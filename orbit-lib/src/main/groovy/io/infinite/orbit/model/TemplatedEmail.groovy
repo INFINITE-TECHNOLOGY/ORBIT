@@ -2,7 +2,7 @@ package io.infinite.orbit.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-class FormularEmail extends FormularBase {
+class TemplatedEmail extends TemplatedMessage {
 
     @JsonProperty(required = true)
     String from
@@ -11,6 +11,6 @@ class FormularEmail extends FormularBase {
     String to
 
     @JsonProperty(required = true)
-    TemplateSelector subjectSelector
+    TemplateSelectionData subjectSelectionData
 
 }

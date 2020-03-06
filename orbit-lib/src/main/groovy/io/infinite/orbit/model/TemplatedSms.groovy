@@ -2,11 +2,9 @@ package io.infinite.orbit.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-abstract class FormularBase {
-
-    Map<String, String> fieldValues
+class TemplatedSms extends TemplatedMessage {
 
     @JsonProperty(required = true)
-    TemplateSelector bodySelector
+    String telephone
 
 }
