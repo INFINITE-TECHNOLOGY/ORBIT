@@ -17,9 +17,9 @@ import javax.mail.internet.MimeMessage
 @Controller
 @BlackBox
 @Slf4j
-class EmailController {
+class FormularEmailController {
 
-    @PostMapping(value = "/orbit/email")
+    @PostMapping(value = "/orbit/formularEmail")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
