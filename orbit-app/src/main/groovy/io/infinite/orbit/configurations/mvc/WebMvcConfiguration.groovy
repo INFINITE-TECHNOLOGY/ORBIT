@@ -1,6 +1,7 @@
 package io.infinite.orbit.configurations.mvc
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.infinite.blackbox.BlackBox
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
  * Taken from: https://blog.jdriven.com/2016/11/handling-yaml-format-rest-spring-boot/
  */
 @Configuration
+@BlackBox
 class WebMvcConfiguration implements WebMvcConfigurer {
 
     private static final MediaType MEDIA_TYPE_YAML = MediaType.valueOf("text/yaml")

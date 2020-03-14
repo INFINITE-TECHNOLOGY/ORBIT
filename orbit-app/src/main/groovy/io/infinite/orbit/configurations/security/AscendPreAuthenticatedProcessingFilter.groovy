@@ -6,7 +6,7 @@ import org.springframework.security.web.authentication.preauth.AbstractPreAuthen
 
 import javax.servlet.http.HttpServletRequest
 
-@BlackBox(level = CarburetorLevel.METHOD)
+@BlackBox
 class AscendPreAuthenticatedProcessingFilter extends AbstractPreAuthenticatedProcessingFilter {
 
     @Override

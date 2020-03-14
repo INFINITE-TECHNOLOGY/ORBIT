@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletResponse
 class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
-    @BlackBox(level = CarburetorLevel.METHOD)
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         try {

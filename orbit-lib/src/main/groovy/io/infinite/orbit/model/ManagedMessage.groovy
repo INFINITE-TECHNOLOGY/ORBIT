@@ -1,12 +1,14 @@
 package io.infinite.orbit.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import groovy.transform.ToString
 
-abstract class TemplatedMessage {
+@ToString(includeNames = true, includeFields = true)
+abstract class ManagedMessage {
 
     Map<String, String> templateValues
 
     @JsonProperty(required = true)
-    TemplateSelectionData bodySelectionData
+    TemplateSelectionData templateSelectionData
 
 }

@@ -3,7 +3,7 @@ package io.infinite.orbit.controllers
 import groovy.transform.CompileDynamic
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.orbit.model.Email
+import io.infinite.orbit.model.UnmanagedEmail
 import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Controller
@@ -17,13 +17,13 @@ import javax.mail.internet.MimeMessage
 @Controller
 @BlackBox
 @Slf4j
-class FormularEmailController {
+class UnmanagedEmailController {
 
-    @PostMapping(value = "/orbit/formularEmail")
+    @PostMapping(value = "/orbit/unmanagedEmail")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    void email(@RequestParam("email") Email email
+    void unmanagedEmail(@RequestParam("unmanagedEmail") UnmanagedEmail unmanagedEmail
     ) {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl()
         mailSender.setHost("smtp.gmail.com")
@@ -40,9 +40,9 @@ class FormularEmailController {
         mailProp.put("mail.smtp.user", System.getenv("GMAIL_USERNAME"))
         MimeMessage mimeMessage = mailSender.createMimeMessage()
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false)
-        helper.setTo(email.to)
-        helper.setSubject(email.subject)
-        helper.setText(email.message, false)
+        helper.setTo(unmanagedEmail.to)
+        helper.setSubject(unmanagedEmail.subject)
+        helper.setText(unmanagedEmail.text, false)
         helper.setFrom(System.getenv("GMAIL_FROM"))
         mailSender.send(mimeMessage)
     }

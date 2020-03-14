@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletResponse
  */
 @EnableWebSecurity
 @Slf4j
+@BlackBox
 class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
     @Override
-    @BlackBox
     protected void configure(HttpSecurity http) throws Exception {
         JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter = new JwtTokenAuthenticationFilter()
         http

@@ -17,10 +17,10 @@ import javax.servlet.http.HttpServletResponse
 
 @Component
 @Slf4j
+@BlackBox
 class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
-    @BlackBox(level = CarburetorLevel.METHOD)
     void commence(HttpServletRequest httpServletRequest, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "UNAUTHORIZED")
     }
