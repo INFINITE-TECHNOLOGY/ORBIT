@@ -58,10 +58,10 @@ task sourceJar(type: Jar) {
 }
 
 ext {
-    theTitle = "Cloud Processing"
+    theTitle = "Microservices"
     titleForDocumentation = archivesBaseName + " " + version
     packageTitle = group
-    description = "Cloud Processing"
+    description = "Microservices"
 }
 
 publishing {
@@ -118,6 +118,7 @@ task copyConf(type: Copy, dependsOn: [jar]) {
 task stage(dependsOn: ['build', 'clean'])
 stage.dependsOn(copyConf)
 build.mustRunAfter clean
+bintrayUpload.dependsOn(build)
 
 configurations {
     providedRuntime
