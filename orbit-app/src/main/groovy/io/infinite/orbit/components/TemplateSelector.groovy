@@ -78,10 +78,10 @@ class TemplateSelector {
         return result
     }
 
-    String executeTemplate(TemplateSelectionData templateSelectionData, String partnerId, TemplateTypes templateType, Map<String, String> templateValues) {
-        Set<Template> templates = templateRepository.findByNameAndPartnerIdAndType(
+    String executeTemplate(TemplateSelectionData templateSelectionData, String clientId, TemplateTypes templateType, Map<String, String> templateValues) {
+        Set<Template> templates = templateRepository.findByNameAndclientIdAndType(
                 templateSelectionData.templateName,
-                partnerId,
+                clientId,
                 templateType.value()
         )
         Template template = findTemplate(templates, templateSelectionData)

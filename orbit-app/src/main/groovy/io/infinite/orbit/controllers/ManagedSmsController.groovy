@@ -19,18 +19,18 @@ class ManagedSmsController {
     @Autowired
     TemplateSelector templateSelector
 
-    @PostMapping(value = "/orbit/{partnerId}/managedSms")
+    @PostMapping(value = "/orbit/{clientId}/managedSms")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
     void managedSms(@RequestParam("managedSms") ManagedSms managedSms,
-                    @PathVariable("partnerId") String partnerId
+                    @PathVariable("clientId") String clientId
     ) {
         UnmanagedSms unmanagedSms = new UnmanagedSms()
         unmanagedSms.telephone = managedSms.telephone
         unmanagedSms.text = templateSelector.executeTemplate(
                 managedSms.templateSelectionData,
-                partnerId,
+                clientId,
                 TemplateTypes.TEXT,
                 managedSms.templateValues
         )

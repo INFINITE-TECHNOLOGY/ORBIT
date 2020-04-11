@@ -19,7 +19,7 @@ class Template {
     @Column(nullable = false)
     Long id
 
-    String partnerId
+    String clientId
 
     String name
 

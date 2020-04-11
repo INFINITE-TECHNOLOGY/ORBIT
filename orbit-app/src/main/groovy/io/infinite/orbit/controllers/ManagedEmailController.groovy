@@ -19,24 +19,24 @@ class ManagedEmailController {
     @Autowired
     TemplateSelector templateSelector
 
-    @PostMapping(value = "/orbit/{partnerId}/managedEmail")
+    @PostMapping(value = "/orbit/{clientId}/managedEmail")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
     void managedEmail(@RequestParam("managedEmail") ManagedEmail managedEmail,
-               @PathVariable("partnerId") String partnerId
+               @PathVariable("clientId") String clientId
     ) {
         UnmanagedEmail unmanagedEmail = new UnmanagedEmail()
         unmanagedEmail.to = managedEmail.to
         unmanagedEmail.subject = templateSelector.executeTemplate(
                 managedEmail.templateSelectionData,
-                partnerId,
+                clientId,
                 TemplateTypes.SUBJECT,
                 managedEmail.templateValues
         )
         unmanagedEmail.text = templateSelector.executeTemplate(
                 managedEmail.templateSelectionData,
-                partnerId,
+                clientId,
                 TemplateTypes.TEXT,
                 managedEmail.templateValues
         )
