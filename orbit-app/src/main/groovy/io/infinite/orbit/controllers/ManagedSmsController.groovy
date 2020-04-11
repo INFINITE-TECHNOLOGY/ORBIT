@@ -3,10 +3,8 @@ package io.infinite.orbit.controllers
 import groovy.transform.CompileDynamic
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.orbit.components.TemplateSelector
 import io.infinite.orbit.model.ManagedSms
-import io.infinite.orbit.model.UnmanagedSms
-import io.infinite.orbit.other.TemplateTypes
+import io.infinite.orbit.services.ManagedSmsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -17,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 class ManagedSmsController {
 
     @Autowired
-    TemplateSelector templateSelector
+    ManagedSmsService managedSmsService
 
     @PostMapping(value = "/orbit/{clientId}/managedSms")
     @ResponseBody
@@ -26,14 +24,7 @@ class ManagedSmsController {
     void managedSms(@RequestParam("managedSms") ManagedSms managedSms,
                     @PathVariable("clientId") String clientId
     ) {
-        UnmanagedSms unmanagedSms = new UnmanagedSms()
-        unmanagedSms.telephone = managedSms.telephone
-        unmanagedSms.text = templateSelector.executeTemplate(
-                managedSms.templateSelectionData,
-                clientId,
-                TemplateTypes.TEXT,
-                managedSms.templateValues
-        )
+        managedSmsService.managedSms(managedSms, clientId)
     }
 
 }

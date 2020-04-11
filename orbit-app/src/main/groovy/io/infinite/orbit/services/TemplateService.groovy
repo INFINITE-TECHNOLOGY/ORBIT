@@ -1,4 +1,4 @@
-package io.infinite.orbit.components
+package io.infinite.orbit.services
 
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component
 @BlackBox
 @Slf4j
 @Component
-class TemplateSelector {
+class TemplateService {
 
     @Autowired
     TemplateRepository templateRepository
@@ -79,7 +79,7 @@ class TemplateSelector {
     }
 
     String executeTemplate(TemplateSelectionData templateSelectionData, String clientId, TemplateTypes templateType, Map<String, String> templateValues) {
-        Set<Template> templates = templateRepository.findByNameAndclientIdAndType(
+        Set<Template> templates = templateRepository.findByNameAndClientIdAndTemplateType(
                 templateSelectionData.templateName,
                 clientId,
                 templateType.value()

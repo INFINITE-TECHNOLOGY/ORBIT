@@ -4,20 +4,21 @@ import groovy.transform.CompileDynamic
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.orbit.model.UnmanagedEmail
-import org.springframework.mail.javamail.JavaMailSenderImpl
-import org.springframework.mail.javamail.MimeMessageHelper
+import io.infinite.orbit.services.UnmanagedEmailService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 
-import javax.mail.internet.MimeMessage
-
 @Controller
 @BlackBox
 @Slf4j
 class UnmanagedEmailController {
+
+    @Autowired
+    UnmanagedEmailService unmanagedEmailService
 
     @PostMapping(value = "/orbit/unmanagedEmail")
     @ResponseBody
@@ -25,26 +26,7 @@ class UnmanagedEmailController {
     @CrossOrigin
     void unmanagedEmail(@RequestParam("unmanagedEmail") UnmanagedEmail unmanagedEmail
     ) {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl()
-        mailSender.setHost("smtp.gmail.com")
-        mailSender.setPort(465)
-        mailSender.setUsername(System.getenv("GMAIL_USERNAME"))
-        mailSender.setPassword(System.getenv("GMAIL_PASSWORD"))
-        Properties mailProp = mailSender.getJavaMailProperties()
-        mailProp.put("mail.transport.protocol", "smtp")
-        mailProp.put("mail.smtp.auth", "true")
-        mailProp.put("mail.smtp.starttls.enable", "true")
-        mailProp.put("mail.smtp.starttls.required", "true")
-        mailProp.put("mail.debug", "true")
-        mailProp.put("mail.smtp.ssl.enable", "true")
-        mailProp.put("mail.smtp.user", System.getenv("GMAIL_USERNAME"))
-        MimeMessage mimeMessage = mailSender.createMimeMessage()
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false)
-        helper.setTo(unmanagedEmail.to)
-        helper.setSubject(unmanagedEmail.subject)
-        helper.setText(unmanagedEmail.text, false)
-        helper.setFrom(System.getenv("GMAIL_FROM"))
-        mailSender.send(mimeMessage)
+        unmanagedEmailService.unmanagedEmail(unmanagedEmail)
     }
 
 }

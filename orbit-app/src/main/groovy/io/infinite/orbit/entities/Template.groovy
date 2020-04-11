@@ -19,6 +19,8 @@ class Template {
     @Column(nullable = false)
     Long id
 
+    String templateType
+
     String clientId
 
     String name
