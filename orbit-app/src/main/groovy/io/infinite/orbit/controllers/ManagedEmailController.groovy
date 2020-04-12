@@ -21,7 +21,7 @@ class ManagedEmailController {
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    void managedEmail(@RequestParam("managedEmail") ManagedEmail managedEmail,
+    void managedEmail(@RequestBody ManagedEmail managedEmail,
                       @PathVariable("clientId") String clientId
     ) {
         managedEmailService.managedEmail(managedEmail, clientId)

@@ -21,7 +21,7 @@ class ManagedSmsController {
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    void managedSms(@RequestParam("managedSms") ManagedSms managedSms,
+    void managedSms(@RequestBody ManagedSms managedSms,
                     @PathVariable("clientId") String clientId
     ) {
         managedSmsService.managedSms(managedSms, clientId)
