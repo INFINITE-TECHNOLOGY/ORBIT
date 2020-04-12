@@ -31,7 +31,7 @@ class ManagedEmailService {
         unmanagedEmail.text = templateSelector.executeTemplate(
                 managedEmail.templateSelectionData,
                 appName,
-                TemplateTypes.TEXT,
+                TemplateTypes.BODY,
                 managedEmail.templateValues
         )
         unmanagedEmailService.unmanagedEmail(unmanagedEmail)

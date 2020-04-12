@@ -26,7 +26,7 @@ class ManagedSmsService {
         unmanagedSms.text = templateSelector.executeTemplate(
                 managedSms.templateSelectionData,
                 appName,
-                TemplateTypes.TEXT,
+                TemplateTypes.BODY,
                 managedSms.templateValues
         )
         unmanagedSmsService.unmanagedSms(unmanagedSms)

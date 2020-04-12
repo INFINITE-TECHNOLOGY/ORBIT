@@ -3,7 +3,7 @@ package io.infinite.orbit.other
 enum TemplateTypes {
 
     SUBJECT("subject"),
-    TEXT("text")
+    BODY("body")
 
     private final String templateType
 
