@@ -25,8 +25,6 @@ class Template {
 
     String language
 
-    String environment
-
     String appName
 
     String text
