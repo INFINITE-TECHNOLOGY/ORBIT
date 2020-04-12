@@ -7,9 +7,6 @@ import groovy.transform.ToString
 class ManagedEmail extends ManagedMessage {
 
     @JsonProperty(required = true)
-    String from
-
-    @JsonProperty(required = true)
     String to
 
 }

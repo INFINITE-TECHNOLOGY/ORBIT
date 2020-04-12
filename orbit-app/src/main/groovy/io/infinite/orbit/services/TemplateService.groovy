@@ -35,19 +35,6 @@ class TemplateService {
 
     Template priorityThree(Set<Template> templates, TemplateSelectionData templateSelectionData) {
         return templates.find {
-            it.environment == templateSelectionData.environment &&
-                    it.language == templateSelectionData.language
-        }
-    }
-
-    Template priorityFour(Set<Template> templates, TemplateSelectionData templateSelectionData) {
-        return templates.find {
-            it.environment == templateSelectionData.environment
-        }
-    }
-
-    Template priorityFive(Set<Template> templates, TemplateSelectionData templateSelectionData) {
-        return templates.find {
             it.language == templateSelectionData.language
         }
     }
@@ -56,9 +43,7 @@ class TemplateService {
         Template result = [
                 priorityOne(templates, templateSelectionData),
                 priorityTwo(templates, templateSelectionData),
-                priorityThree(templates, templateSelectionData),
-                priorityFour(templates, templateSelectionData),
-                priorityFive(templates, templateSelectionData)
+                priorityThree(templates, templateSelectionData)
         ].find { it != null }
         if (result == null) {
             throw new OrbitException("Template not found: $templateSelectionData")

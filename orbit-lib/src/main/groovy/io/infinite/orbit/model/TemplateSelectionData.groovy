@@ -9,8 +9,6 @@ class TemplateSelectionData {
 
     String language
 
-    String environment
-
     String application
 
 }
