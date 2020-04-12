@@ -27,8 +27,6 @@ class Template {
 
     String language
 
-    String channel
-
     String environment
 
     String application

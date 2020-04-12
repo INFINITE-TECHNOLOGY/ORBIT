@@ -9,8 +9,6 @@ class TemplateSelectionData {
 
     String language
 
-    String channel
-
     String environment
 
     String application

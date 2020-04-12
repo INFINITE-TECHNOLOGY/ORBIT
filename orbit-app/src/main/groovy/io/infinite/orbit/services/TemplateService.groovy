@@ -23,43 +23,32 @@ class TemplateService {
     Template priorityOne(Set<Template> templates, TemplateSelectionData templateSelectionData) {
         return templates.find {
             it.application == templateSelectionData.application &&
-                    it.language == templateSelectionData.language &&
-                    it.channel == templateSelectionData.channel
+                    it.language == templateSelectionData.language
         }
     }
 
     Template priorityTwo(Set<Template> templates, TemplateSelectionData templateSelectionData) {
         return templates.find {
-            it.application == templateSelectionData.application &&
-                    it.channel == templateSelectionData.channel
+            it.application == templateSelectionData.application
         }
     }
 
     Template priorityThree(Set<Template> templates, TemplateSelectionData templateSelectionData) {
         return templates.find {
             it.environment == templateSelectionData.environment &&
-                    it.language == templateSelectionData.language &&
-                    it.channel == templateSelectionData.channel
+                    it.language == templateSelectionData.language
         }
     }
 
     Template priorityFour(Set<Template> templates, TemplateSelectionData templateSelectionData) {
         return templates.find {
-            it.environment == templateSelectionData.environment &&
-                    it.channel == templateSelectionData.channel
+            it.environment == templateSelectionData.environment
         }
     }
 
     Template priorityFive(Set<Template> templates, TemplateSelectionData templateSelectionData) {
         return templates.find {
-            it.language == templateSelectionData.language &&
-                    it.channel == templateSelectionData.channel
-        }
-    }
-
-    Template prioritySix(Set<Template> templates, TemplateSelectionData templateSelectionData) {
-        return templates.find {
-            it.channel == templateSelectionData.channel
+            it.language == templateSelectionData.language
         }
     }
 
@@ -69,8 +58,7 @@ class TemplateService {
                 priorityTwo(templates, templateSelectionData),
                 priorityThree(templates, templateSelectionData),
                 priorityFour(templates, templateSelectionData),
-                priorityFive(templates, templateSelectionData),
-                prioritySix(templates, templateSelectionData)
+                priorityFive(templates, templateSelectionData)
         ].find { it != null }
         if (result == null) {
             throw new OrbitException("Template not found: $templateSelectionData")
