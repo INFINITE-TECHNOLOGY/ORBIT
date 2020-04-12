@@ -22,28 +22,13 @@ class TemplateService {
 
     Template priorityOne(Set<Template> templates, TemplateSelectionData templateSelectionData) {
         return templates.find {
-            it.application == templateSelectionData.application &&
-                    it.language == templateSelectionData.language
-        }
-    }
-
-    Template priorityTwo(Set<Template> templates, TemplateSelectionData templateSelectionData) {
-        return templates.find {
-            it.application == templateSelectionData.application
-        }
-    }
-
-    Template priorityThree(Set<Template> templates, TemplateSelectionData templateSelectionData) {
-        return templates.find {
             it.language == templateSelectionData.language
         }
     }
 
     Template findTemplate(Set<Template> templates, TemplateSelectionData templateSelectionData) {
         Template result = [
-                priorityOne(templates, templateSelectionData),
-                priorityTwo(templates, templateSelectionData),
-                priorityThree(templates, templateSelectionData)
+                priorityOne(templates, templateSelectionData)
         ].find { it != null }
         if (result == null) {
             throw new OrbitException("Template not found: $templateSelectionData")
@@ -51,10 +36,10 @@ class TemplateService {
         return result
     }
 
-    String executeTemplate(TemplateSelectionData templateSelectionData, String clientId, TemplateTypes templateType, Map<String, String> templateValues) {
-        Set<Template> templates = templateRepository.findByNameAndClientIdAndTemplateType(
+    String executeTemplate(TemplateSelectionData templateSelectionData, String appName, TemplateTypes templateType, Map<String, String> templateValues) {
+        Set<Template> templates = templateRepository.findByNameAndAppNameAndTemplateType(
                 templateSelectionData.templateName,
-                clientId,
+                appName,
                 templateType.value()
         )
         Template template = findTemplate(templates, templateSelectionData)

@@ -21,15 +21,13 @@ class Template {
 
     String templateType
 
-    String clientId
-
     String name
 
     String language
 
     String environment
 
-    String application
+    String appName
 
     String text
 

@@ -17,14 +17,14 @@ class ManagedSmsController {
     @Autowired
     ManagedSmsService managedSmsService
 
-    @PostMapping(value = "/orbit/{clientId}/managedSms")
+    @PostMapping(value = "/orbit/{appName}/managedSms")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
     void managedSms(@RequestBody ManagedSms managedSms,
-                    @PathVariable("clientId") String clientId
+                    @PathVariable("appName") String appName
     ) {
-        managedSmsService.managedSms(managedSms, clientId)
+        managedSmsService.managedSms(managedSms, appName)
     }
 
 }
