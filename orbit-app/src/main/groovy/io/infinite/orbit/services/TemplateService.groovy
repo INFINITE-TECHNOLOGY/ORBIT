@@ -20,30 +20,17 @@ class TemplateService {
     @Autowired
     TemplateRepository templateRepository
 
-    Template priorityOne(Set<Template> templates, TemplateSelectionData templateSelectionData) {
-        return templates.find {
-            it.language == templateSelectionData.language
-        }
-    }
-
-    Template findTemplate(Set<Template> templates, TemplateSelectionData templateSelectionData) {
-        Template result = [
-                priorityOne(templates, templateSelectionData)
-        ].find { it != null }
-        if (result == null) {
-            throw new OrbitException("Template not found: $templateSelectionData")
-        }
-        return result
-    }
-
     String executeTemplate(TemplateSelectionData templateSelectionData, String appName, TemplateTypes templateType, Map<String, String> templateValues) {
-        Set<Template> templates = templateRepository.findByNameAndAppNameAndTemplateType(
+        Set<Template> templates = templateRepository.findByNameAndAppNameAndTemplateTypeAndLanguage(
                 templateSelectionData.templateName,
                 appName,
-                templateType.value()
+                templateType.value(),
+                templateSelectionData.language
         )
-        Template template = findTemplate(templates, templateSelectionData)
-        String result = template.text
+        if (templates.isEmpty()) {
+            throw new OrbitException("Template not found: ${templateType.value()} - $templateSelectionData")
+        }
+        String result = templates.first().text
         templateValues.each { k, v ->
             result = result.replace("\${" + k + "}", v)
         }

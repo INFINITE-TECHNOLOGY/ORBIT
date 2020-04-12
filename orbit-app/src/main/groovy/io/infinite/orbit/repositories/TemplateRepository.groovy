@@ -8,10 +8,11 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource
 @RepositoryRestResource
 interface TemplateRepository extends JpaRepository<Template, Long> {
 
-    Set<Template> findByNameAndAppNameAndTemplateType(
+    Set<Template> findByNameAndAppNameAndTemplateTypeAndLanguage(
             @Param("name") String name,
             @Param("appName") String appName,
-            @Param("templateType") String templateType
+            @Param("templateType") String templateType,
+            @Param("language") String language
     )
 
     Set<Template> findByAppName(
