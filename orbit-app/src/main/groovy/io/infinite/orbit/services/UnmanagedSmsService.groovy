@@ -17,7 +17,7 @@ class UnmanagedSmsService {
         Twilio.init(System.getenv("TWILIO_SID"), System.getenv("TWILIO_TOKEN"))
         Message message = Message.creator(
                 new PhoneNumber(unmanagedSms.telephone),
-                System.getenv("TWILIO_FROM"),
+                new PhoneNumber(System.getenv("TWILIO_FROM")),
                 unmanagedSms.text
         ).create()
         log.debug(message.getSid())
