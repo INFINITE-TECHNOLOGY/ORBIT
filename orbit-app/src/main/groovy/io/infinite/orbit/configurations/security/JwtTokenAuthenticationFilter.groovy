@@ -11,6 +11,7 @@ import io.infinite.http.HttpResponse
 import io.infinite.http.SenderDefaultHttps
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
+import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.filter.OncePerRequestFilter
 
 import javax.servlet.FilterChain
@@ -75,6 +76,7 @@ class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
         }
         catch (Exception e) {
             log.error("Exception", e)
+            response.sendError(500, e.message)
             SecurityContextHolder.clearContext()
         }
     }
