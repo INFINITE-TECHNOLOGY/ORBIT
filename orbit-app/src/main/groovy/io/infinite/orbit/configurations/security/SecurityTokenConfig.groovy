@@ -2,6 +2,7 @@ package io.infinite.orbit.configurations.security
 
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
@@ -18,9 +19,11 @@ import javax.servlet.http.HttpServletResponse
 @BlackBox
 class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    OrbitJwtTokenAuthenticationFilter jwtTokenAuthenticationFilter
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        OrbitJwtTokenAuthenticationFilter jwtTokenAuthenticationFilter = new OrbitJwtTokenAuthenticationFilter()
         http
                 .csrf()
                 .disable()
