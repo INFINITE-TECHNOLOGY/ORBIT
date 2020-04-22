@@ -20,7 +20,7 @@ class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter = new JwtTokenAuthenticationFilter()
+        OrbitJwtTokenAuthenticationFilter jwtTokenAuthenticationFilter = new OrbitJwtTokenAuthenticationFilter()
         http
                 .csrf()
                 .disable()
