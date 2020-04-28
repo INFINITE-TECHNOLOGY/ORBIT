@@ -5,6 +5,8 @@ import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.orbit.entities.Otp
 import io.infinite.orbit.entities.PrototypeOtp
+import io.infinite.orbit.model.ManagedOtpSmsHandle
+import io.infinite.orbit.model.ManagedSms
 import io.infinite.orbit.repositories.NamespaceRepository
 import io.infinite.orbit.repositories.OtpRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,10 +25,7 @@ import java.time.Instant
 class OtpSmsService {
 
     @Autowired
-    TemplateService templateSelector
-
-    @Autowired
-    ManagedEmailService managedEmailService
+    ManagedSmsService managedSmsService
 
     @Autowired
     NamespaceRepository namespaceRepository
@@ -34,16 +33,25 @@ class OtpSmsService {
     @Autowired
     OtpRepository otpRepository
 
-    Otp otpSms(String namespaceName) {
+    ManagedOtpSmsHandle otpSms(ManagedSms managedSms, String namespaceName) {
         try {
             PrototypeOtp prototypeOtp = namespaceRepository.findByName(namespaceName).prototypeOtp
-            return otpRepository.saveAndFlush(new Otp(
+            Otp otp = otpRepository.saveAndFlush(new Otp(
                     namespace: namespaceName,
                     otp: new DecimalFormat("".padLeft(prototypeOtp.length, "0")).format(new SecureRandom().nextInt("".padLeft(prototypeOtp.length, "9").toInteger())),
                     creationDate: new Date(),
                     expiryDate: (Instant.now() + Duration.ofSeconds(prototypeOtp.durationSeconds)).toDate(),
                     maxAttemptsCount: prototypeOtp.maxAttemptsCount
             )).strip()
+            managedSms.templateValues.put("otp", otp.otp)
+            managedSmsService.managedSms(
+                    managedSms,
+                    namespaceName
+            )
+            new ManagedOtpSmsHandle(
+                    guid: otp.guid,
+                    namespace: otp.namespace
+            )
         } catch (Exception exception) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Exception generating OTP", exception)
         }
