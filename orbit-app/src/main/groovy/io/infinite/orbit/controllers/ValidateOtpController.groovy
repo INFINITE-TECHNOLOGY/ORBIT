@@ -4,7 +4,8 @@ import groovy.transform.CompileDynamic
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.orbit.entities.Otp
-import io.infinite.orbit.services.OtpService
+import io.infinite.orbit.model.ManagedOtp
+import io.infinite.orbit.services.ValidateOtpService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -12,17 +13,17 @@ import org.springframework.web.bind.annotation.*
 @Controller
 @BlackBox
 @Slf4j
-class OtpController {
+class ValidateOtpController {
 
     @Autowired
-    OtpService otpService
+    ValidateOtpService otpService
 
-    @PostMapping(value = "/orbit/otp")
+    @PostMapping(value = "/orbit/{namespace}/validateOtp")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    void otpSms(@RequestBody Otp otp) {
-        otpService.otp(otp)
+    void validateOtp(@PathVariable("namespace") String namespace, @RequestBody ManagedOtp managedOtp) {
+        otpService.validateOtp(managedOtp, namespace)
     }
 
 }

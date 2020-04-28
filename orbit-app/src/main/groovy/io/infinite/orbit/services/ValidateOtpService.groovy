@@ -4,7 +4,7 @@ import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.orbit.entities.Otp
-import io.infinite.orbit.model.ManagedOtpSms
+import io.infinite.orbit.model.ManagedOtp
 import io.infinite.orbit.repositories.NamespaceRepository
 import io.infinite.orbit.repositories.OtpRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException
 @Service
 @BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
-class OtpService {
+class ValidateOtpService {
 
     @Autowired
     NamespaceRepository namespaceRepository
@@ -23,9 +23,9 @@ class OtpService {
     @Autowired
     OtpRepository otpRepository
 
-    void otp(ManagedOtpSms managedOtpSms) {
+    void validateOtp(ManagedOtp managedOtpSms, String namespace) {
         try {
-            Optional<Otp> otpOptional = otpRepository.findByGuidAndNamespace(managedOtpSms.guid, managedOtpSms.namespace)
+            Optional<Otp> otpOptional = otpRepository.findByGuidAndNamespace(managedOtpSms.guid, namespace)
             if (!otpOptional.present) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP GUID not found")
             }
