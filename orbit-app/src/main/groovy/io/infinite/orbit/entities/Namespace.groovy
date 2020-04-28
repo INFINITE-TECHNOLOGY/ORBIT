@@ -16,6 +16,7 @@ class Namespace {
 
     String name
 
+    @OneToOne(fetch = FetchType.EAGER)
     PrototypeOtp prototypeOtp
 
     @OneToMany(fetch = FetchType.EAGER)
