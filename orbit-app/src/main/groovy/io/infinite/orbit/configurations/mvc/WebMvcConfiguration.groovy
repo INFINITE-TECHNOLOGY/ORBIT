@@ -32,7 +32,6 @@ class WebMvcConfiguration implements WebMvcConfigurer {
                 .favorPathExtension(false)
                 .favorParameter(true)
                 .ignoreAcceptHeader(false)
-                .defaultContentType(MediaType.APPLICATION_JSON)
                 .mediaType(MediaType.APPLICATION_JSON.subtype, MediaType.APPLICATION_JSON)
                 .mediaType(MEDIA_TYPE_YAML.subtype, MEDIA_TYPE_YAML)
     }

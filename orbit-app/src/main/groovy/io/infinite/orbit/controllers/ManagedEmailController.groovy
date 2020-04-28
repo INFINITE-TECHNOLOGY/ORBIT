@@ -17,14 +17,14 @@ class ManagedEmailController {
     @Autowired
     ManagedEmailService managedEmailService
 
-    @PostMapping(value = "/orbit/{appName}/managedEmail")
+    @PostMapping(value = "/orbit/{namespace}/managedEmail")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
     void managedEmail(@RequestBody ManagedEmail managedEmail,
-                      @PathVariable("appName") String appName
+                      @PathVariable("namespace") String namespace
     ) {
-        managedEmailService.managedEmail(managedEmail, appName)
+        managedEmailService.managedEmail(managedEmail, namespace)
     }
 
 }

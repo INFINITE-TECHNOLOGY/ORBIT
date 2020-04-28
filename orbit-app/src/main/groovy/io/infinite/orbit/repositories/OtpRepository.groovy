@@ -1,0 +1,13 @@
+package io.infinite.orbit.repositories
+
+
+import io.infinite.orbit.entities.Otp
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.rest.core.annotation.RepositoryRestResource
+
+@RepositoryRestResource
+interface OtpRepository extends JpaRepository<Otp, Long> {
+
+    Optional<Otp> findByGuidAndNamespace(UUID guid, String namespace)
+
+}

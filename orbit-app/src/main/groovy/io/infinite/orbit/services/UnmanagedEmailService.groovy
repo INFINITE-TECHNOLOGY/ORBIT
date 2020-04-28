@@ -2,6 +2,7 @@ package io.infinite.orbit.services
 
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
+import io.infinite.carburetor.CarburetorLevel
 import io.infinite.orbit.model.UnmanagedEmail
 import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.mail.javamail.MimeMessageHelper
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service
 import javax.mail.internet.MimeMessage
 
 @Service
-@BlackBox
+@BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
 class UnmanagedEmailService {
 
