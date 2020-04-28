@@ -14,6 +14,7 @@ class Namespace {
     @Column(nullable = false)
     Long id
 
+    @Column(unique=true)
     String name
 
     @OneToOne(fetch = FetchType.EAGER)
