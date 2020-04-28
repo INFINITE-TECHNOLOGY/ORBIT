@@ -7,7 +7,7 @@ import javax.persistence.*
 
 @Entity
 @Table
-@ToString(includeNames = true, includeFields = true)
+@ToString(includeNames = true, includeFields = true, excludes = ["otp"])
 class Otp {
 
     @Id
@@ -30,6 +30,8 @@ class Otp {
     Integer attemptsCount = 0
 
     Integer maxAttemptsCount
+
+    Integer durationSeconds
 
     Otp strip() {
         otp = null

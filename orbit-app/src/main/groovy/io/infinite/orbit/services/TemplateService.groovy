@@ -21,7 +21,7 @@ class TemplateService {
     @Autowired
     TemplateRepository templateRepository
 
-    String executeTemplate(TemplateSelectionData templateSelectionData, String namespace, TemplateTypes templateType, Map<String, Object> templateValues) {
+    String executeTemplate(TemplateSelectionData templateSelectionData, String namespace, TemplateTypes templateType, Map<String, String> templateValues) {
         Set<Template> templates = templateRepository.matchPriorityOne(
                 templateSelectionData.templateName,
                 namespace,
@@ -40,7 +40,7 @@ class TemplateService {
         }
         String result = templates.first().text
         templateValues.each { k, v ->
-            result = result.replace("\${" + k + "}", v.toString())
+            result = result.replace("\${" + k + "}", v)
         }
         return result
     }

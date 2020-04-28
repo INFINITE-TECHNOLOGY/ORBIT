@@ -6,7 +6,7 @@ import groovy.transform.ToString
 @ToString(includeNames = true, includeFields = true)
 abstract class ManagedMessage {
 
-    Map<String, Object> templateValues
+    Map<String, String> templateValues
 
     @JsonProperty(required = true)
     TemplateSelectionData templateSelectionData

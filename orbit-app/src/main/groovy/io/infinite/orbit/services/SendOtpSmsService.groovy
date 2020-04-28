@@ -46,9 +46,14 @@ class SendOtpSmsService {
                     otp: new DecimalFormat("".padLeft(prototypeOtp.length, "0")).format(new SecureRandom().nextInt("".padLeft(prototypeOtp.length, "9").toInteger())),
                     creationDate: new Date(),
                     expiryDate: (Instant.now() + Duration.ofSeconds(prototypeOtp.durationSeconds)).toDate(),
-                    maxAttemptsCount: prototypeOtp.maxAttemptsCount
-            )).strip()
-            managedSms.templateValues.put("otp", otp)
+                    maxAttemptsCount: prototypeOtp.maxAttemptsCount,
+                    durationSeconds: prototypeOtp.durationSeconds
+            ))
+            managedSms.templateValues.put("namespace", otp.namespace)
+            managedSms.templateValues.put("guid", otp.guid.toString())
+            managedSms.templateValues.put("otp", otp.otp)
+            managedSms.templateValues.put("maxAttemptsCount", otp.maxAttemptsCount.toString())
+            managedSms.templateValues.put("durationSeconds", otp.durationSeconds.toString())
             managedSmsService.managedSms(
                     managedSms,
                     namespaceName
