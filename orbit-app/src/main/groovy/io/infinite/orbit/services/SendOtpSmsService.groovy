@@ -7,6 +7,7 @@ import io.infinite.orbit.entities.Otp
 import io.infinite.orbit.entities.PrototypeOtp
 import io.infinite.orbit.model.ManagedOtpHandle
 import io.infinite.orbit.model.ManagedSms
+import io.infinite.orbit.other.OrbitException
 import io.infinite.orbit.repositories.OtpRepository
 import io.infinite.orbit.repositories.PrototypeOtpRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -35,7 +36,11 @@ class SendOtpSmsService {
 
     ManagedOtpHandle sendOtpSms(ManagedSms managedSms, String namespaceName) {
         try {
-            PrototypeOtp prototypeOtp = prototypeOtpRepository.findByNamespace(namespaceName)
+            Optional<PrototypeOtp> prototypeOtpOptional = prototypeOtpRepository.findByNamespace(namespaceName)
+            if (!prototypeOtpOptional.present) {
+                throw new OrbitException("Prototype OTP is not configured.")
+            }
+            PrototypeOtp prototypeOtp = prototypeOtpOptional.get()
             Otp otp = otpRepository.saveAndFlush(new Otp(
                     namespace: namespaceName,
                     otp: new DecimalFormat("".padLeft(prototypeOtp.length, "0")).format(new SecureRandom().nextInt("".padLeft(prototypeOtp.length, "9").toInteger())),

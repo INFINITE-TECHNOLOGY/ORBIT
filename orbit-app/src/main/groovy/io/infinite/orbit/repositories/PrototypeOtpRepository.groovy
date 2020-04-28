@@ -7,6 +7,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource
 @RepositoryRestResource(exported = false)
 interface PrototypeOtpRepository extends JpaRepository<PrototypeOtp, Long> {
 
-    PrototypeOtp findByNamespace(String namespace)
+    Optional<PrototypeOtp> findByNamespace(String namespace)
 
 }

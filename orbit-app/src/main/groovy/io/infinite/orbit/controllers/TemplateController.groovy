@@ -24,7 +24,7 @@ class TemplateController {
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    void otpSms(@PathVariable("namespace") String namespace, @RequestBody Template template) {
+    void template(@PathVariable("namespace") String namespace, @RequestBody Template template) {
         template.namespace = namespace
         templateRepository.saveAndFlush(template)
     }
