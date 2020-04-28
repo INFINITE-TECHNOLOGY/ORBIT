@@ -5,7 +5,6 @@ import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.orbit.entities.Otp
 import io.infinite.orbit.model.ManagedOtp
-import io.infinite.orbit.repositories.NamespaceRepository
 import io.infinite.orbit.repositories.OtpRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -18,14 +17,11 @@ import org.springframework.web.server.ResponseStatusException
 class ValidateOtpService {
 
     @Autowired
-    NamespaceRepository namespaceRepository
-
-    @Autowired
     OtpRepository otpRepository
 
-    void validateOtp(ManagedOtp managedOtpSms, String namespace) {
+    void validateOtp(ManagedOtp managedOtp, String namespace) {
         try {
-            Optional<Otp> otpOptional = otpRepository.findByGuidAndNamespace(managedOtpSms.guid, namespace)
+            Optional<Otp> otpOptional = otpRepository.findByGuidAndNamespace(managedOtp.guid, namespace)
             if (!otpOptional.present) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP GUID not found")
             }
@@ -36,7 +32,7 @@ class ValidateOtpService {
             if (actualOtp.attemptsCount >= actualOtp.maxAttemptsCount) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP validation maximum attempts count exceeded")
             }
-            if (actualOtp.otp != managedOtpSms.otp) {
+            if (actualOtp.otp != managedOtp.otp) {
                 actualOtp.attemptsCount++
                 otpRepository.saveAndFlush(actualOtp)
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong OTP")

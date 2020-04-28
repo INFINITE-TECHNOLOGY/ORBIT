@@ -8,7 +8,7 @@ import io.infinite.orbit.entities.Template
 import io.infinite.orbit.model.TemplateSelectionData
 import io.infinite.orbit.other.OrbitException
 import io.infinite.orbit.other.TemplateTypes
-import io.infinite.orbit.repositories.NamespaceRepository
+import io.infinite.orbit.repositories.TemplateRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -19,17 +19,17 @@ import org.springframework.stereotype.Component
 class TemplateService {
 
     @Autowired
-    NamespaceRepository namespaceRepository
+    TemplateRepository templateRepository
 
     String executeTemplate(TemplateSelectionData templateSelectionData, String namespace, TemplateTypes templateType, Map<String, Object> templateValues) {
-        Set<Template> templates = namespaceRepository.matchPriorityOne(
+        Set<Template> templates = templateRepository.matchPriorityOne(
                 templateSelectionData.templateName,
                 namespace,
                 templateType.value(),
                 templateSelectionData.language
         )
         if (templates.isEmpty()) {
-            templates = namespaceRepository.matchPriorityTwo(
+            templates = templateRepository.matchPriorityTwo(
                     templateSelectionData.templateName,
                     namespace,
                     templateType.value()

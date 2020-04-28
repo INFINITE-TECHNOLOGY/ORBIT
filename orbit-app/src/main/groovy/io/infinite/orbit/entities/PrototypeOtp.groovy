@@ -15,6 +15,8 @@ class PrototypeOtp {
     @Column(nullable = false)
     Long id
 
+    String namespace
+
     Integer durationSeconds
 
     Integer maxAttemptsCount

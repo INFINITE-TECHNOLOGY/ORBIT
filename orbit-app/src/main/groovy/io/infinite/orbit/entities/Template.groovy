@@ -1,5 +1,6 @@
 package io.infinite.orbit.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import groovy.transform.ToString
 
 import javax.persistence.Column
@@ -18,6 +19,9 @@ class Template {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     Long id
+
+    @JsonIgnore
+    String namespace
 
     String templateType
 

@@ -1,18 +1,17 @@
 package io.infinite.orbit.repositories
 
-import io.infinite.orbit.entities.Namespace
+
 import io.infinite.orbit.entities.Template
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.data.rest.core.annotation.RepositoryRestResource
 
-@RepositoryRestResource
-interface NamespaceRepository extends JpaRepository<Template, Long> {
+@RepositoryRestResource(exported = false)
+interface TemplateRepository extends JpaRepository<Template, Long> {
 
-    @Query("""select t from Namespace n
-    join n.templates t
-    where n.name = :namespace
+    @Query("""select t from Template t
+    where t.namespace = :namespace
     and t.name = :templateName
     and t.templateType = :templateType
     and t.language = :language""")
@@ -23,9 +22,8 @@ interface NamespaceRepository extends JpaRepository<Template, Long> {
             @Param("language") String language
     )
 
-    @Query("""select t from Namespace n
-    join n.templates t
-    where n.name = :namespace
+    @Query("""select t from Template t
+    where t.namespace = :namespace
     and t.name = :templateName
     and t.templateType = :templateType
     and t.language is null""")
@@ -34,7 +32,5 @@ interface NamespaceRepository extends JpaRepository<Template, Long> {
             @Param("namespace") String namespace,
             @Param("templateType") String templateType
     )
-
-    Namespace findByName(String name)
 
 }

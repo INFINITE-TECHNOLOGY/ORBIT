@@ -3,8 +3,10 @@ package io.infinite.orbit.controllers
 import groovy.transform.CompileDynamic
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
+import io.infinite.orbit.entities.Template
 import io.infinite.orbit.model.ManagedOtpHandle
 import io.infinite.orbit.model.ManagedSms
+import io.infinite.orbit.repositories.TemplateRepository
 import io.infinite.orbit.services.SendOtpSmsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -13,17 +15,18 @@ import org.springframework.web.bind.annotation.*
 @Controller
 @BlackBox
 @Slf4j
-class SendOtpSmsController {
+class TemplateController {
 
     @Autowired
-    SendOtpSmsService otpSmsService
+    TemplateRepository templateRepository
 
-    @PostMapping(value = "/orbit/{namespace}/sendOtpSms")
+    @PostMapping(value = "/orbit/{namespace}/templates")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    ManagedOtpHandle otpSms(@PathVariable("namespace") String namespace, @RequestBody ManagedSms managedSms) {
-        return otpSmsService.sendOtpSms(managedSms, namespace)
+    void otpSms(@PathVariable("namespace") String namespace, @RequestBody Template template) {
+        template.namespace = namespace
+        templateRepository.saveAndFlush(template)
     }
 
 }
