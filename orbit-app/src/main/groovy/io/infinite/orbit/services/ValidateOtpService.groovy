@@ -19,9 +19,9 @@ class ValidateOtpService {
     @Autowired
     OtpRepository otpRepository
 
-    void validateOtp(ManagedOtp managedOtp, String namespace) {
+    void validateOtp(ManagedOtp managedOtp) {
         try {
-            Optional<Otp> otpOptional = otpRepository.findByGuidAndNamespace(managedOtp.guid, namespace)
+            Optional<Otp> otpOptional = otpRepository.findByGuid(managedOtp.guid)
             if (!otpOptional.present) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP GUID not found")
             }

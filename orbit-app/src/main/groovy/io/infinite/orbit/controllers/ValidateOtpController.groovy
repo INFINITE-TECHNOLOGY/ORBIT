@@ -18,12 +18,12 @@ class ValidateOtpController {
     @Autowired
     ValidateOtpService otpService
 
-    @PostMapping(value = "/orbit/{namespace}/validateOtp")
+    @PostMapping(value = "/orbit/public/validateOtp")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    void validateOtp(@PathVariable("namespace") String namespace, @RequestBody ManagedOtp managedOtp) {
-        otpService.validateOtp(managedOtp, namespace)
+    void validateOtp(@RequestBody ManagedOtp managedOtp) {
+        otpService.validateOtp(managedOtp)
     }
 
 }
