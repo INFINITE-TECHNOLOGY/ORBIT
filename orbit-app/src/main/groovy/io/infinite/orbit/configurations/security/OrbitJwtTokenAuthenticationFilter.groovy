@@ -3,13 +3,10 @@ package io.infinite.orbit.configurations.security
 import groovy.util.logging.Slf4j
 import io.infinite.ascend.validation.client.services.ClientAuthorizationValidationService
 import io.infinite.blackbox.BlackBox
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Service
 import org.springframework.web.filter.OncePerRequestFilter
 
-import javax.annotation.PostConstruct
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -25,17 +22,12 @@ class OrbitJwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
     ClientAuthorizationValidationService clientAuthorizationValidationService = new ClientAuthorizationValidationService()
 
-    @Autowired
-    ApplicationContext applicationContext
+    @Value('${ascendValidationUrl}')
+    String ascendValidationUrl
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
-        clientAuthorizationValidationService.validateServletRequest(request, response, filterChain)
-    }
-
-    @PostConstruct
-    void postConstruct() {
-        applicationContext.autowireCapableBeanFactory.autowireBean(clientAuthorizationValidationService)
+        clientAuthorizationValidationService.validateServletRequest(ascendValidationUrl, request, response, filterChain)
     }
 
 }
