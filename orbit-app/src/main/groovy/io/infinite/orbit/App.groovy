@@ -20,6 +20,7 @@ class App implements CommandLineRunner {
     @BlackBox
     void run(String... args) throws Exception {
         log.debug("Started Orbit.")
+        System.setProperty("orbitUrl", "")
     }
 
 }
