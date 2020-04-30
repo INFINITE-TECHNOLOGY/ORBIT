@@ -27,7 +27,7 @@ class OrbitJwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
-        clientAuthorizationValidationService.validateServletRequest(ascendValidationUrl, request, response, filterChain)
+        clientAuthorizationValidationService.validateServletRequest(request, response, filterChain)
     }
 
 }
