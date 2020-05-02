@@ -11,6 +11,7 @@ import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.filter.CommonsRequestLoggingFilter
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 /**
@@ -56,6 +57,12 @@ class WebMvcConfiguration implements WebMvcConfigurer {
         filter.includeHeaders = false
         filter.afterMessagePrefix = "REQUEST DATA : "
         return filter
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/public/**")
+                .addResourceLocations("classpath:/public/")
     }
 
 }
