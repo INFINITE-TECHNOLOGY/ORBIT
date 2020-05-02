@@ -18,7 +18,7 @@ class ManagedSmsController {
     @Autowired
     ManagedSmsService managedSmsService
 
-    @PostMapping(value = "/orbit/{namespace}/managedSms")
+    @PostMapping(value = "/{namespace}/managedSms")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin

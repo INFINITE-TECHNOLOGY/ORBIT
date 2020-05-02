@@ -21,7 +21,7 @@ class UnmanagedSmsController {
     @Autowired
     UnmanagedSmsService unmanagedSmsService
 
-    @PostMapping(value = "/orbit/unmanagedSms")
+    @PostMapping(value = "/unmanagedSms")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin

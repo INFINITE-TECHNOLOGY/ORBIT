@@ -18,7 +18,7 @@ class ValidateOtpController {
     @Autowired
     ValidateOtpService otpService
 
-    @PostMapping(value = "/orbit/public/validateOtp")
+    @PostMapping(value = "/public/validateOtp")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin

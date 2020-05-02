@@ -19,7 +19,7 @@ class SendOtpSmsController {
     @Autowired
     SendOtpSmsService otpSmsService
 
-    @PostMapping(value = "/orbit/{namespace}/sendOtpSms")
+    @PostMapping(value = "/{namespace}/sendOtpSms")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin

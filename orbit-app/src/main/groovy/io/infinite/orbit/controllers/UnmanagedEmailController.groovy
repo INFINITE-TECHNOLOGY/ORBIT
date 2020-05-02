@@ -21,7 +21,7 @@ class UnmanagedEmailController {
     @Autowired
     UnmanagedEmailService unmanagedEmailService
 
-    @PostMapping(value = "/orbit/unmanagedEmail")
+    @PostMapping(value = "/unmanagedEmail")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin

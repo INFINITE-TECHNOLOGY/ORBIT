@@ -18,7 +18,7 @@ class PrototypeOtpController {
     @Autowired
     PrototypeOtpRepository prototypeOtpRepository
 
-    @PostMapping(value = "/orbit/{namespace}/prototypeOtp")
+    @PostMapping(value = "/{namespace}/prototypeOtp")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin

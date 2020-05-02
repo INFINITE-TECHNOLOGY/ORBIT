@@ -21,7 +21,7 @@ class TemplateController {
     @Autowired
     TemplateRepository templateRepository
 
-    @PostMapping(value = "/orbit/{namespace}/templates")
+    @PostMapping(value = "/{namespace}/templates")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
