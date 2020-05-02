@@ -7,7 +7,7 @@ import javax.persistence.*
 
 @Entity
 @Table
-@ToString(includeNames = true, includeFields = true, excludes = ["otp"])
+@ToString(includeNames = true, includeFields = true)
 class Registration {
 
     @Id
