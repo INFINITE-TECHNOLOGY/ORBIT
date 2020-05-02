@@ -17,6 +17,7 @@ class Registration {
 
     String namespace
 
+    @Column(unique = true)
     UUID guid = UUID.randomUUID()
 
     String phone

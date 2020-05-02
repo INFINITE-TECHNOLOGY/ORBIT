@@ -18,6 +18,14 @@ class RegistrationController {
     @Autowired
     RegistrationService registrationService
 
+    @PostMapping(value = "/public/validateRegistrationGuid")
+    @ResponseBody
+    @CompileDynamic
+    @CrossOrigin
+    void validateRegistrationGuid(@RequestParam String guid) {
+        registrationService.validateGuid(guid)
+    }
+
     @GetMapping(value = "/{namespace}/registration/{phone}")
     @ResponseBody
     @CompileDynamic

@@ -10,4 +10,6 @@ interface RegistrationRepository extends JpaRepository<Registration, Long> {
 
     Set<Registration> findByNamespaceAndPhone(String namespace, String phone)
 
+    Optional<Registration> findByGuid(UUID guid)
+
 }

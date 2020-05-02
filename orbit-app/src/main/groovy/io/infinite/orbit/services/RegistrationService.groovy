@@ -46,4 +46,17 @@ class RegistrationService {
         }
     }
 
+    void validateGuid(String guid) {
+        try {
+            Optional<Registration> registrationOptional = registrationRepository.findByGuid(UUID.fromString(guid))
+            if (!registrationOptional.present) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND)
+            }
+        } catch (ResponseStatusException responseStatusException) {
+            throw responseStatusException
+        } catch (Exception exception) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Registration search error", exception)
+        }
+    }
+
 }
