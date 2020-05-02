@@ -62,10 +62,5 @@ class WebMvcConfiguration implements WebMvcConfigurer {
         return filter
     }
 
-    @Override
-    void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/public/")
-    }
 
 }
