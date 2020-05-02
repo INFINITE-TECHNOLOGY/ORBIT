@@ -61,7 +61,7 @@ class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/public/**")
+        registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/public/")
     }
 
