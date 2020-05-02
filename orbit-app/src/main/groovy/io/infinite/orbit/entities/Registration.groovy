@@ -23,6 +23,6 @@ class Registration {
     String phone
 
     @JsonFormat(timezone = "UTC", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    Date creationDate
+    Date creationDate = new Date()
 
 }
