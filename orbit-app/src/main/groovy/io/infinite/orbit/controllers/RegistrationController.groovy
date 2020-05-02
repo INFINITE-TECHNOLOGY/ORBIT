@@ -8,10 +8,7 @@ import io.infinite.orbit.entities.Registration
 import io.infinite.orbit.services.RegistrationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.*
 
 @Controller
 @BlackBox(level = CarburetorLevel.METHOD)
@@ -27,6 +24,14 @@ class RegistrationController {
     @CrossOrigin
     Registration findByNamespaceAndPhone(@PathVariable("namespace") String namespace, @PathVariable("phone") String phone) {
         return registrationService.findByNamespaceAndPhone(namespace, phone)
+    }
+
+    @PostMapping(value = "/{namespace}/registration")
+    @ResponseBody
+    @CompileDynamic
+    @CrossOrigin
+    Registration createRegistration(@PathVariable("namespace") String namespace, @RequestParam String phone) {
+        return registrationService.createRegistration(namespace, phone)
     }
 
 }

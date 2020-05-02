@@ -18,9 +18,12 @@ class RegistrationService {
     @Autowired
     RegistrationRepository registrationRepository
 
-    Registration createRegistration(Registration registration) {
+    Registration createRegistration(String namespace, String phone) {
         try {
-            return registrationRepository.saveAndFlush(registration)
+            return registrationRepository.saveAndFlush(new Registration(
+                    namespace: namespace,
+                    phone: phone
+            ))
         } catch (Exception exception) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Registration error", exception)
         }
@@ -39,7 +42,7 @@ class RegistrationService {
         } catch (ResponseStatusException responseStatusException) {
             throw responseStatusException
         } catch (Exception exception) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Registration error", exception)
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Registration search error", exception)
         }
     }
 
