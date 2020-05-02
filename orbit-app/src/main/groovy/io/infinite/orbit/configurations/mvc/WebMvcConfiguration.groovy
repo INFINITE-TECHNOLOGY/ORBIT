@@ -2,9 +2,11 @@ package io.infinite.orbit.configurations.mvc
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.infinite.blackbox.BlackBox
+import io.infinite.carburetor.CarburetorLevel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
@@ -18,7 +20,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
  * Taken from: https://blog.jdriven.com/2016/11/handling-yaml-format-rest-spring-boot/
  */
 @Configuration
-@BlackBox
+@BlackBox(level = CarburetorLevel.METHOD)
+@ComponentScan
 class WebMvcConfiguration implements WebMvcConfigurer {
 
     private static final MediaType MEDIA_TYPE_YAML = MediaType.valueOf("text/yaml")
@@ -60,7 +63,7 @@ class WebMvcConfiguration implements WebMvcConfigurer {
     }
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/public/")
     }
