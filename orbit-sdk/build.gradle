@@ -8,21 +8,13 @@ plugins {
     id "maven-publish"
     id "idea"
     id "jacoco"
-    id "org.springframework.boot" version "2.1.1.RELEASE"
-    id "io.spring.dependency-management" version "1.0.6.RELEASE"
     id "enterprise.groovy.plugin" version "1.0.4"
 }
 
 apply plugin: 'com.jfrog.bintray'
 
-
-bootJar {
-    baseName = 'orbit-app'
-    version = '1.0.1'
-}
-
 ext['groovy.version'] = '2.5.4'
-ext['springBootVersion'] = '2.1.1.RELEASE'
+
 sourceCompatibility = 1.8
 group = "io.i-t"
 version = "1.0.1"
@@ -41,7 +33,9 @@ sourceSets {
 }
 
 dependencies {
-    compile project(':orbit-lib')
+    compile 'org.codehaus.groovy:groovy-all:2.5.4'
+    compile "io.i-t:bobbin:3.0.0"
+    compile 'io.i-t:blackbox:1.0.21'
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.boot:spring-boot-starter-security'
@@ -96,36 +90,11 @@ bintray {
     pkg {
         userOrg = "infinite-technology"
         repo = "io.i-t"
-        name = "orbit-app"
+        name = "orbit-sdk"
         desc = "Microservices"
         issueTrackerUrl = "https://github.com/INFINITE-TECHNOLOGY/ORBIT/issues"
         vcsUrl = "https://github.com/INFINITE-TECHNOLOGY/ORBIT.git"
         websiteUrl = "https://i-t.io/Orbit/"
         licenses = ["Apache-2.0"]
     }
-}
-
-configurations {
-    providedRuntime
-    compile.exclude(group: 'ch.qos.logback')
-}
-
-task copyConf(type: Copy, dependsOn: [jar]) {
-    from "src/main/resources/"
-    into "build/conf"
-    include "Orbit.json"
-}
-
-task stage(dependsOn: ['build', 'clean'])
-stage.dependsOn(copyConf)
-build.mustRunAfter clean
-bintrayUpload.dependsOn(build)
-
-configurations {
-    providedRuntime
-    compile.exclude(group: 'ch.qos.logback')
-}
-
-dependencyManagement {
-    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
 }

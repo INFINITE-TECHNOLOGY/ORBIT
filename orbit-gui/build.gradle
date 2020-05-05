@@ -1,0 +1,106 @@
+/*
+File
+https://github.com/virtualdogbert/GroovyConfigWriter/blob/master/build.gradle
+has been used as basis for this file.
+ */
+plugins {
+    id "groovy"
+    id "maven-publish"
+    id "idea"
+    id "org.springframework.boot" version "2.2.6.RELEASE"
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+    //id "enterprise.groovy.plugin" version "1.0.4"
+}
+
+repositories {
+    maven {
+        url  "https://dl.bintray.com/infinite-technology/io.i-t"
+    }
+}
+
+//apply plugin: 'com.jfrog.bintray'
+bootJar {
+    baseName = 'orbit-gui'
+    version = '1.0.0'
+}
+
+ext['groovy.version'] = '2.5.4'
+ext['springBootVersion'] = '2.2.6.RELEASE'
+
+sourceCompatibility = 1.8
+group = "io.i-t"
+version = "1.0.0"
+description = "Web Service Access Management"
+
+repositories {
+    jcenter()
+}
+
+sourceSets {
+    main.groovy.srcDirs = ["src/main/groovy"]
+    test.groovy.srcDirs = ["src/test/groovy"]
+}
+
+dependencies {
+    compile project(':orbit-sdk')
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier "sources"
+}
+
+ext {
+    theTitle = "Web Service Access Management"
+    titleForDocumentation = archivesBaseName + " " + version
+    packageTitle = group
+    description = "Web Service Access Management"
+}
+
+publishing {
+    publications {
+        groovyMaven(MavenPublication) {
+            from components.java
+            artifact(sourceJar) {
+                classifier "sources"
+            }
+        }
+    }
+}
+
+task jarSrc(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives(jarSrc)
+}
+
+/*bintray {
+    user = System.getenv("bintrayuser")
+    key = System.getenv("bintraypassword")
+    System.out.println(user)
+    System.out.println(key)
+    publications = ["groovyMaven"]
+    def projectName = project.name
+    def projectDescription = project.description
+    pkg {
+        userOrg = "infinite-technology"
+        repo = "io.i-t"
+        name = "ascend-cli"
+        desc = "Web Service Access Management"
+        issueTrackerUrl = "https://github.com/INFINITE-TECHNOLOGY/ASCEND/issues"
+        vcsUrl = "https://github.com/INFINITE-TECHNOLOGY/ASCEND.git"
+        websiteUrl = "https://i-t.io/Ascend/"
+        licenses = ["Apache-2.0"]
+    }
+}*/
+
+configurations {
+    providedRuntime
+    compile.exclude(group: 'ch.qos.logback')
+}
+
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean

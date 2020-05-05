@@ -17,5 +17,6 @@ include 'services:webservice'
 
 rootProject.name = 'orbit'
 
-include 'orbit-lib'
-include 'orbit-app'
+include 'orbit-sdk'
+include 'orbit-web'
+include 'orbit-gui'
