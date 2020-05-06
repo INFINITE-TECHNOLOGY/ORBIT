@@ -59,4 +59,20 @@ class RegistrationService {
         }
     }
 
+    void validateAdminGuid(String guid) {
+        try {
+            Optional<Registration> registrationOptional = registrationRepository.findByGuid(UUID.fromString(guid))
+            if (!registrationOptional.present) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND)
+            }
+            if (!registrationOptional.get().isAdmin) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST)
+            }
+        } catch (ResponseStatusException responseStatusException) {
+            throw responseStatusException
+        } catch (Exception exception) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Admin validation error", exception)
+        }
+    }
+
 }

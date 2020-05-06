@@ -34,12 +34,20 @@ class RegistrationController {
         return registrationService.findByNamespaceAndPhone(namespace, phone)
     }
 
-    @PostMapping(value = "/{namespace}/registration")
+    @PostMapping(value = "/{namespace}/registration/{phone}")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    Registration createRegistration(@PathVariable("namespace") String namespace, @RequestParam String phone) {
+    Registration createRegistration(@PathVariable("namespace") String namespace, @PathVariable("phone") String phone) {
         return registrationService.createRegistration(namespace, phone)
+    }
+
+    @PostMapping(value = "/public/validateAdministratorGuid/{guid}")
+    @ResponseBody
+    @CompileDynamic
+    @CrossOrigin
+    void validateAdminGuid(@PathVariable("guid") String guid) {
+        registrationService.validateAdminGuid(guid)
     }
 
 }

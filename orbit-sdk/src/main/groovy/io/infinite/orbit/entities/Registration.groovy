@@ -25,4 +25,6 @@ class Registration {
     @JsonFormat(timezone = "UTC", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     Date creationDate = new Date()
 
+    Boolean isAdmin
+
 }
