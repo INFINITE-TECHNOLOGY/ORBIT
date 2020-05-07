@@ -34,7 +34,7 @@ import java.awt.event.ActionListener
                 "io.infinite.orbit"
         ],
         excludeFilters = [
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = ClientJwtPreparator.class)
+               //@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = ClientJwtPreparator.class)
         ])
 @EnableJpaRepositories([
         "io.infinite.ascend",
@@ -45,6 +45,8 @@ import java.awt.event.ActionListener
         "io.infinite.orbit"
 ])
 class OrbitGuiApp implements ApplicationRunner {
+
+    static OrbitGuiApp instance
 
     String ascendClientPublicKeyName
 
@@ -70,8 +72,6 @@ class OrbitGuiApp implements ApplicationRunner {
 
     JPanel anonymousPanel = new JPanel().add(new JLabel("Please wait while we log you in...")).parent as JPanel
 
-    JPanel mainPanel = new JPanel().add(anonymousPanel).parent as JPanel
-
     JFrame mainFrame = new JFrame(
             name: "mainFrame",
             title: "Infinite Technology ∞ Orbit Admin",
@@ -79,7 +79,7 @@ class OrbitGuiApp implements ApplicationRunner {
             defaultCloseOperation: JFrame.EXIT_ON_CLOSE,
             size: new Dimension(1366, 768),
             locationRelativeTo: null,
-            contentPane: mainPanel
+            contentPane: anonymousPanel
     )
 
     JPanel unauthorizedPanel = new JPanel()
@@ -96,6 +96,8 @@ class OrbitGuiApp implements ApplicationRunner {
         System.setProperty("jwtRefreshKeyPublic", "")
         System.setProperty("jwtRefreshKeyPrivate", "")
         System.setProperty("ascendValidationUrl", "")
+        System.setProperty("ascendClientPublicKeyName", "")
+        System.setProperty("ascendClientPrivateKey", "")
         System.setProperty("orbitUrl", "")
         SpringApplicationBuilder builder = new SpringApplicationBuilder(OrbitGuiApp.class)
         builder.headless(false)
@@ -109,6 +111,7 @@ class OrbitGuiApp implements ApplicationRunner {
                 showPanel(adminPanel)
                 authorizationTimer.start()
             } catch (Exception e) {
+                log.warn("Authorization error", e)
                 unauthorized()
             }
         }
@@ -136,6 +139,7 @@ class OrbitGuiApp implements ApplicationRunner {
 
     @Override
     void run(ApplicationArguments args) throws Exception {
+        OrbitGuiApp.instance = this
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
         init()
         authorized()
@@ -150,9 +154,6 @@ class OrbitGuiApp implements ApplicationRunner {
                     retryAuthorization()
                 }
         ))
-        mainPanel.add(anonymousPanel)
-        mainPanel.add(unauthorizedPanel)
-        mainPanel.add(adminPanel)
     }
 
 }
