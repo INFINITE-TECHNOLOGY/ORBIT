@@ -3,7 +3,6 @@ package io.infinite.orbit
 import groovy.swing.SwingBuilder
 import groovy.util.logging.Slf4j
 import io.infinite.ascend.common.entities.Authorization
-import io.infinite.ascend.granting.client.authentication.ClientJwtPreparator
 import io.infinite.ascend.granting.client.services.ClientAuthorizationGrantingService
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
@@ -16,7 +15,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.FilterType
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 import javax.swing.*
@@ -64,11 +62,13 @@ class OrbitGuiApp implements ApplicationRunner {
 
     Authorization adminScopeAuthorization
 
-    SwingBuilder swing = new SwingBuilder()
+    SwingBuilder swingBuilder = new SwingBuilder()
 
     RootPaneContainer frame
 
     JPanel adminPanel = new JPanel()
+
+    JLabel unauthorizedMessageLabel = new JLabel("Sorry there is an authorization error.")
 
     JPanel anonymousPanel = new JPanel().add(new JLabel("Please wait while we log you in...")).parent as JPanel
 
@@ -111,8 +111,7 @@ class OrbitGuiApp implements ApplicationRunner {
                 showPanel(adminPanel)
                 authorizationTimer.start()
             } catch (Exception e) {
-                log.warn("Authorization error", e)
-                unauthorized()
+                unauthorized(e.getMessage())
             }
         }
     }
@@ -125,6 +124,11 @@ class OrbitGuiApp implements ApplicationRunner {
                 mainFrame.repaint()
             }
         })
+    }
+
+    void unauthorized(String message) {
+        unauthorizedMessageLabel.text = message
+        unauthorized()
     }
 
     void unauthorized() {
@@ -147,8 +151,8 @@ class OrbitGuiApp implements ApplicationRunner {
 
     void init() {
         adminPanel.add(new JLabel("Welcome to Admin Panel."))
-        unauthorizedPanel.add(new JLabel("Sorry there is an authorization error."))
-        unauthorizedPanel.add(swing.button(
+        unauthorizedPanel.add(unauthorizedMessageLabel)
+        unauthorizedPanel.add(swingBuilder.button(
                 text: "Retry authorization",
                 actionPerformed: {
                     retryAuthorization()

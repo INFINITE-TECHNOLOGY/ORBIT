@@ -1,5 +1,6 @@
 package io.infinite.orbit.authentications
 
+import groovy.swing.SwingBuilder
 import io.infinite.ascend.common.entities.AuthenticationData
 import io.infinite.ascend.common.exceptions.AscendException
 import io.infinite.ascend.granting.client.authentication.ClientJwtPreparator
@@ -8,6 +9,7 @@ import io.infinite.carburetor.CarburetorLevel
 import io.infinite.orbit.OrbitGuiApp
 import org.springframework.stereotype.Service
 
+import javax.annotation.PostConstruct
 import javax.swing.*
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -25,24 +27,29 @@ class AdminPreparator extends ClientJwtPreparator {
 
     JTextField ascendClientPublicKeyNameTextField = new JTextField(16)
 
-    @Override
-    AuthenticationData prepareAuthentication() {
-        OrbitGuiApp orbitGuiApp = OrbitGuiApp.instance
+    SwingBuilder swingBuilder = new SwingBuilder()
+
+    @PostConstruct
+    void init() {
         adminAuthenticationPanel.add(new JLabel("Please enter Ascend Client Private Key Name:"))
         adminAuthenticationPanel.add(ascendClientPublicKeyNameTextField)
-        adminAuthenticationPanel.add(orbitGuiApp.swing.button(
+        adminAuthenticationPanel.add(swingBuilder.button(
                 text: "Confirm",
                 actionPerformed: {
                     commence()
                 }
         ))
-        adminAuthenticationPanel.add(orbitGuiApp.swing.button(
+        adminAuthenticationPanel.add(swingBuilder.button(
                 text: "Cancel",
                 actionPerformed: {
                     cancel()
                 }
         ))
-        orbitGuiApp.showPanel(adminAuthenticationPanel)
+    }
+
+    @Override
+    AuthenticationData prepareAuthentication() {
+        OrbitGuiApp.instance.showPanel(adminAuthenticationPanel)
         if (userInputQueue.take()) {
             return super.prepareAuthentication()
         } else {
