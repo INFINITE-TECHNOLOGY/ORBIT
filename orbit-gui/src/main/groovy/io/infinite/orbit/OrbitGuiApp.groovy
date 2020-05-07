@@ -1,14 +1,14 @@
 package io.infinite.orbit
 
 import groovy.swing.SwingBuilder
-import groovy.ui.ConsoleActions
-import groovy.ui.ConsoleView
 import groovy.util.logging.Slf4j
+import io.infinite.ascend.common.entities.Authorization
 import io.infinite.ascend.granting.client.authentication.ClientJwtPreparator
 import io.infinite.ascend.granting.client.services.ClientAuthorizationGrantingService
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -20,7 +20,9 @@ import org.springframework.context.annotation.FilterType
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 import javax.swing.*
-import java.awt.Window
+import java.awt.*
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
 
 @BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
@@ -46,6 +48,7 @@ class OrbitGuiApp implements ApplicationRunner {
 
     String ascendClientPublicKeyName
 
+    @Value('${ascendGrantingUrl}')
     String ascendGrantingUrl
 
     String scopeName
@@ -57,9 +60,35 @@ class OrbitGuiApp implements ApplicationRunner {
     @Autowired
     ClientAuthorizationGrantingService clientAuthorizationGrantingService
 
-    SwingBuilder swing
+    Authorization adminScopeAuthorization
+
+    SwingBuilder swing = new SwingBuilder()
 
     RootPaneContainer frame
+
+    JPanel adminPanel = new JPanel()
+
+    JPanel anonymousPanel = new JPanel().add(new JLabel("Please wait while we log you in...")).parent as JPanel
+
+    JPanel mainPanel = new JPanel().add(anonymousPanel).parent as JPanel
+
+    JFrame mainFrame = new JFrame(
+            name: "mainFrame",
+            title: "Infinite Technology ∞ Orbit Admin",
+            visible: true,
+            defaultCloseOperation: JFrame.EXIT_ON_CLOSE,
+            size: new Dimension(1366, 768),
+            locationRelativeTo: null,
+            contentPane: mainPanel
+    )
+
+    JPanel unauthorizedPanel = new JPanel()
+
+    Timer authorizationTimer = new Timer(1000, new ActionListener() {
+        void actionPerformed(ActionEvent actionEvent) {
+            authorized()
+        }
+    })
 
     static void main(String[] args) {
         System.setProperty("jwtAccessKeyPublic", "")
@@ -73,10 +102,57 @@ class OrbitGuiApp implements ApplicationRunner {
         ConfigurableApplicationContext context = builder.run(args)
     }
 
+    void authorized() {
+        Thread.start {
+            try {
+                adminScopeAuthorization = clientAuthorizationGrantingService.grantByScope("adminScope", ascendGrantingUrl, "global", "OrbitSaaS")
+                showPanel(adminPanel)
+                authorizationTimer.start()
+            } catch (Exception e) {
+                unauthorized()
+            }
+        }
+    }
+
+    void showPanel(JPanel jPanel) {
+        SwingUtilities.invokeLater(new Runnable() {
+            void run() {
+                mainFrame.contentPane = jPanel
+                jPanel.revalidate()
+                mainFrame.repaint()
+            }
+        })
+    }
+
+    void unauthorized() {
+        authorizationTimer.stop()
+        showPanel(unauthorizedPanel)
+    }
+
+    void retryAuthorization() {
+        showPanel(anonymousPanel)
+        authorized()
+    }
+
     @Override
     void run(ApplicationArguments args) throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-        new GroovyMainForm().show()
+        init()
+        authorized()
+    }
+
+    void init() {
+        adminPanel.add(new JLabel("Welcome to Admin Panel."))
+        unauthorizedPanel.add(new JLabel("Sorry there is an authorization error."))
+        unauthorizedPanel.add(swing.button(
+                text: "Retry authorization",
+                actionPerformed: {
+                    retryAuthorization()
+                }
+        ))
+        mainPanel.add(anonymousPanel)
+        mainPanel.add(unauthorizedPanel)
+        mainPanel.add(adminPanel)
     }
 
 }
