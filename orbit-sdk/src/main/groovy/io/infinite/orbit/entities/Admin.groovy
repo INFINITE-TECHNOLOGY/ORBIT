@@ -8,7 +8,7 @@ import javax.persistence.*
 @Entity
 @Table
 @ToString(includeNames = true, includeFields = true)
-class Registration {
+class Admin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +22,9 @@ class Registration {
 
     String phone
 
+    String email
+
     @JsonFormat(timezone = "UTC", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     Date creationDate = new Date()
-
-    Boolean isAdmin
 
 }

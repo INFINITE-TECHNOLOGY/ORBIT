@@ -1,9 +1,8 @@
 package io.infinite.orbit.authentications
 
 import groovy.swing.SwingBuilder
-import io.infinite.ascend.common.entities.AuthenticationData
 import io.infinite.ascend.common.exceptions.AscendException
-import io.infinite.ascend.granting.client.authentication.ClientJwtPreparator
+import io.infinite.ascend.granting.client.authentication.AuthenticationPreparator
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.orbit.OrbitGuiApp
@@ -11,11 +10,12 @@ import org.springframework.stereotype.Service
 
 import javax.annotation.PostConstruct
 import javax.swing.*
+import java.awt.*
 import java.util.concurrent.LinkedBlockingQueue
 
 @BlackBox(level = CarburetorLevel.METHOD)
 @Service
-class AdminPreparator extends ClientJwtPreparator {
+class AdminPreparator implements AuthenticationPreparator {
 
     String ascendClientPublicKeyName
 
@@ -45,13 +45,14 @@ class AdminPreparator extends ClientJwtPreparator {
                     cancel()
                 }
         ))
+        adminAuthenticationPanel.add(new JLabel("Powered by Ascend.rest"), BorderLayout.SOUTH)
     }
 
     @Override
-    AuthenticationData prepareAuthentication() {
+    void prepareAuthentication(Map<String, String> publicCredentials, Map<String, String> privateCredentials) {
         OrbitGuiApp.instance.showPanel(adminAuthenticationPanel)
         if (userInputQueue.take()) {
-            return super.prepareAuthentication()
+
         } else {
             throw new AscendException("Authentication cancelled as per user request")
         }

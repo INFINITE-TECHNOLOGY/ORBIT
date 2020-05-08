@@ -40,7 +40,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.boot:spring-boot-starter-security'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.8'
-    compile 'io.i-t:ascend-sdk:0.5.4'
+    compile 'io.i-t:ascend-sdk:0.5.5'
     compile group: 'com.sun.mail', name: 'javax.mail', version: '1.6.0'
     compile group: "com.twilio.sdk", name: "twilio", version: "7.42.0"
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.1.7.RELEASE'
