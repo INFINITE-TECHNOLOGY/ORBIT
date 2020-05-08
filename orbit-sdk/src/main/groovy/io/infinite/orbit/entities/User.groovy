@@ -6,7 +6,7 @@ import groovy.transform.ToString
 import javax.persistence.*
 
 @Entity
-@Table
+@Table(name = "users")
 @ToString(includeNames = true, includeFields = true)
 class User {
 
