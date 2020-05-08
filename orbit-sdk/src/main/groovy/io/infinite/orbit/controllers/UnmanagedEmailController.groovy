@@ -21,12 +21,11 @@ class UnmanagedEmailController {
     @Autowired
     UnmanagedEmailService unmanagedEmailService
 
-    @PostMapping(value = "/unmanagedEmail")
+    @PostMapping(value = "/secured/unmanagedEmail")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    void unmanagedEmail(@RequestBody UnmanagedEmail unmanagedEmail
-    ) {
+    void unmanagedEmail(@RequestBody UnmanagedEmail unmanagedEmail) {
         unmanagedEmailService.unmanagedEmail(unmanagedEmail)
     }
 

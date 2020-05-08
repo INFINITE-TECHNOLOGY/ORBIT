@@ -26,28 +26,28 @@ class AdminController {
         adminService.validateGuid(guid)
     }
 
-    @GetMapping(value = "/{namespace}/admin/search/findByPhone")
+    @GetMapping(value = "/secured/admin/search/findByPhone")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    Admin findByNamespaceAndPhone(@PathVariable("namespace") String namespace, @RequestParam("phone") String phone) {
-        return adminService.findByNamespaceAndPhone(namespace, phone)
+    Admin findByPhone(@RequestParam("phone") String phone) {
+        return adminService.findByPhone(phone)
     }
 
-    @GetMapping(value = "/{namespace}/admin/search/findByEmail")
+    @GetMapping(value = "/secured/admin/search/findByEmail")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    Admin findByNamespaceAndEmail(@PathVariable("namespace") String namespace, @RequestParam("email") String email) {
-        return adminService.findByNamespaceAndEmail(namespace, email)
+    Admin findByEmail(@RequestParam("email") String email) {
+        return adminService.findByEmail(email)
     }
 
-    @PostMapping(value = "/{namespace}/admin")
+    @PostMapping(value = "/secured/admin")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    Admin createAdmin(@PathVariable("namespace") String namespace, @RequestBody Admin admin) {
-        return adminService.createAdmin(namespace, admin)
+    Admin createAdmin(@RequestBody Admin admin) {
+        return adminService.createAdmin(admin)
     }
 
 }

@@ -34,33 +34,26 @@ class SendOtpSmsService {
     @Autowired
     OtpRepository otpRepository
 
-    ManagedOtpHandle sendOtpSms(ManagedSms managedSms, String namespaceName) {
+    ManagedOtpHandle sendOtpSms(ManagedSms managedSms) {
         try {
-            Optional<PrototypeOtp> prototypeOtpOptional = prototypeOtpRepository.findByNamespace(namespaceName)
-            if (!prototypeOtpOptional.present) {
+            List<PrototypeOtp> prototypeOtpOptional = prototypeOtpRepository.findAll()
+            if (prototypeOtpOptional.empty) {
                 throw new OrbitException("Prototype OTP is not configured.")
             }
-            PrototypeOtp prototypeOtp = prototypeOtpOptional.get()
+            PrototypeOtp prototypeOtp = prototypeOtpOptional.first()
             Otp otp = otpRepository.saveAndFlush(new Otp(
-                    namespace: namespaceName,
                     otp: new DecimalFormat("".padLeft(prototypeOtp.length, "0")).format(new SecureRandom().nextInt("".padLeft(prototypeOtp.length, "9").toInteger())),
                     creationDate: new Date(),
                     expiryDate: (Instant.now() + Duration.ofSeconds(prototypeOtp.durationSeconds)).toDate(),
                     maxAttemptsCount: prototypeOtp.maxAttemptsCount,
                     durationSeconds: prototypeOtp.durationSeconds
             ))
-            managedSms.templateValues.put("namespace", otp.namespace)
             managedSms.templateValues.put("guid", otp.guid.toString())
             managedSms.templateValues.put("otp", otp.otp)
             managedSms.templateValues.put("maxAttemptsCount", otp.maxAttemptsCount.toString())
             managedSms.templateValues.put("durationSeconds", otp.durationSeconds.toString())
-            managedSmsService.managedSms(
-                    managedSms,
-                    namespaceName
-            )
-            new ManagedOtpHandle(
-                    guid: otp.guid,
-            )
+            managedSmsService.managedSms(managedSms)
+            new ManagedOtpHandle(guid: otp.guid)
         } catch (Exception exception) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Exception generating OTP", exception)
         }

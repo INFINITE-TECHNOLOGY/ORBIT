@@ -14,7 +14,7 @@ plugins {
 
 repositories {
     maven {
-        url  "https://dl.bintray.com/infinite-technology/io.i-t"
+        url "https://dl.bintray.com/infinite-technology/io.i-t"
     }
 }
 

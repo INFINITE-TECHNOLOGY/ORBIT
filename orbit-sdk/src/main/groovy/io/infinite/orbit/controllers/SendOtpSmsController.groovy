@@ -9,7 +9,10 @@ import io.infinite.orbit.model.ManagedSms
 import io.infinite.orbit.services.SendOtpSmsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
 @BlackBox(level = CarburetorLevel.METHOD)
@@ -19,12 +22,12 @@ class SendOtpSmsController {
     @Autowired
     SendOtpSmsService otpSmsService
 
-    @PostMapping(value = "/{namespace}/sendOtpSms")
+    @PostMapping(value = "/secured/sendOtpSms")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    ManagedOtpHandle otpSms(@PathVariable("namespace") String namespace, @RequestBody ManagedSms managedSms) {
-        return otpSmsService.sendOtpSms(managedSms, namespace)
+    ManagedOtpHandle otpSms(@RequestBody ManagedSms managedSms) {
+        return otpSmsService.sendOtpSms(managedSms)
     }
 
 }

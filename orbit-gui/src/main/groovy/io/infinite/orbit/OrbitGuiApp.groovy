@@ -32,7 +32,7 @@ import java.awt.event.ActionListener
                 "io.infinite.orbit"
         ],
         excludeFilters = [
-               //@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = ClientJwtPreparator.class)
+                //@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = ClientJwtPreparator.class)
         ])
 @EnableJpaRepositories([
         "io.infinite.ascend",

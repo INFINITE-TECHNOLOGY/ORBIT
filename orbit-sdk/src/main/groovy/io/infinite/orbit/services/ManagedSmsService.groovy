@@ -21,12 +21,11 @@ class ManagedSmsService {
     @Autowired
     UnmanagedSmsService unmanagedSmsService
 
-    void managedSms(ManagedSms managedSms, String namespace) {
+    void managedSms(ManagedSms managedSms) {
         UnmanagedSms unmanagedSms = new UnmanagedSms()
         unmanagedSms.telephone = managedSms.telephone
         unmanagedSms.text = templateSelector.executeTemplate(
                 managedSms.templateSelectionData,
-                namespace,
                 TemplateTypes.SMS,
                 managedSms.templateValues
         )

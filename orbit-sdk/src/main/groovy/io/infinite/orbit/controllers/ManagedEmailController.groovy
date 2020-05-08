@@ -8,7 +8,10 @@ import io.infinite.orbit.model.ManagedEmail
 import io.infinite.orbit.services.ManagedEmailService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
 @BlackBox(level = CarburetorLevel.METHOD)
@@ -18,14 +21,12 @@ class ManagedEmailController {
     @Autowired
     ManagedEmailService managedEmailService
 
-    @PostMapping(value = "/{namespace}/managedEmail")
+    @PostMapping(value = "/secured/managedEmail")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    void managedEmail(@RequestBody ManagedEmail managedEmail,
-                      @PathVariable("namespace") String namespace
-    ) {
-        managedEmailService.managedEmail(managedEmail, namespace)
+    void managedEmail(@RequestBody ManagedEmail managedEmail) {
+        managedEmailService.managedEmail(managedEmail)
     }
 
 }

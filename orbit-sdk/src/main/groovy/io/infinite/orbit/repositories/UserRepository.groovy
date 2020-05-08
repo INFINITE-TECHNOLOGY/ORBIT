@@ -8,7 +8,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource
 @RepositoryRestResource(exported = false)
 interface UserRepository extends JpaRepository<User, Long> {
 
-    Set<User> findByNamespaceAndPhone(String namespace, String phone)
+    Set<User> findByPhone(String phone)
 
     Optional<User> findByGuid(UUID guid)
 

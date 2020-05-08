@@ -18,8 +18,7 @@ class AdminService {
     @Autowired
     AdminRepository adminRepository
 
-    Admin createAdmin(String namespace, Admin admin) {
-        admin.namespace = namespace
+    Admin createAdmin(Admin admin) {
         try {
             return adminRepository.saveAndFlush(admin)
         } catch (Exception exception) {
@@ -27,9 +26,9 @@ class AdminService {
         }
     }
 
-    Admin findByNamespaceAndPhone(String namespace, String phone) {
+    Admin findByPhone(String phone) {
         try {
-            Set<Admin> admins = adminRepository.findByNamespaceAndPhone(namespace, phone)
+            Set<Admin> admins = adminRepository.findByPhone(phone)
             if (admins.empty) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND)
             }
@@ -44,9 +43,9 @@ class AdminService {
         }
     }
 
-    Admin findByNamespaceAndEmail(String namespace, String email) {
+    Admin findByEmail(String email) {
         try {
-            Set<Admin> admins = adminRepository.findByNamespaceAndEmail(namespace, email)
+            Set<Admin> admins = adminRepository.findByEmail(email)
             if (admins.empty) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND)
             }

@@ -11,25 +11,21 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource
 interface TemplateRepository extends JpaRepository<Template, Long> {
 
     @Query("""select t from Template t
-    where t.namespace = :namespace
-    and t.name = :templateName
+    where t.name = :templateName
     and t.templateType = :templateType
     and t.language = :language""")
     Set<Template> matchPriorityOne(
             @Param("templateName") String templateName,
-            @Param("namespace") String namespace,
             @Param("templateType") String templateType,
             @Param("language") String language
     )
 
     @Query("""select t from Template t
-    where t.namespace = :namespace
-    and t.name = :templateName
+    where t.name = :templateName
     and t.templateType = :templateType
     and t.language is null""")
     Set<Template> matchPriorityTwo(
             @Param("templateName") String templateName,
-            @Param("namespace") String namespace,
             @Param("templateType") String templateType
     )
 

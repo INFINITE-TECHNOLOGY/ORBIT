@@ -20,18 +20,16 @@ class ManagedEmailService {
     @Autowired
     UnmanagedEmailService unmanagedEmailService
 
-    void managedEmail(ManagedEmail managedEmail, String namespace) {
+    void managedEmail(ManagedEmail managedEmail) {
         UnmanagedEmail unmanagedEmail = new UnmanagedEmail()
         unmanagedEmail.to = managedEmail.to
         unmanagedEmail.subject = templateSelector.executeTemplate(
                 managedEmail.templateSelectionData,
-                namespace,
                 TemplateTypes.EMAIL_SUBJECT,
                 managedEmail.templateValues
         )
         unmanagedEmail.text = templateSelector.executeTemplate(
                 managedEmail.templateSelectionData,
-                namespace,
                 TemplateTypes.EMAIL_BODY,
                 managedEmail.templateValues
         )

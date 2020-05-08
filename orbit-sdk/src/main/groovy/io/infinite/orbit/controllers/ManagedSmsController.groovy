@@ -8,7 +8,10 @@ import io.infinite.orbit.model.ManagedSms
 import io.infinite.orbit.services.ManagedSmsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
 @BlackBox(level = CarburetorLevel.METHOD)
@@ -18,14 +21,12 @@ class ManagedSmsController {
     @Autowired
     ManagedSmsService managedSmsService
 
-    @PostMapping(value = "/{namespace}/managedSms")
+    @PostMapping(value = "/secured/managedSms")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    void managedSms(@RequestBody ManagedSms managedSms,
-                    @PathVariable("namespace") String namespace
-    ) {
-        managedSmsService.managedSms(managedSms, namespace)
+    void managedSms(@RequestBody ManagedSms managedSms) {
+        managedSmsService.managedSms(managedSms)
     }
 
 }

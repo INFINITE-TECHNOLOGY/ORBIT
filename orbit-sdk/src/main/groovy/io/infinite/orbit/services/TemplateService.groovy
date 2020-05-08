@@ -21,17 +21,15 @@ class TemplateService {
     @Autowired
     TemplateRepository templateRepository
 
-    String executeTemplate(TemplateSelectionData templateSelectionData, String namespace, TemplateTypes templateType, Map<String, String> templateValues) {
+    String executeTemplate(TemplateSelectionData templateSelectionData, TemplateTypes templateType, Map<String, String> templateValues) {
         Set<Template> templates = templateRepository.matchPriorityOne(
                 templateSelectionData.templateName,
-                namespace,
                 templateType.value(),
                 templateSelectionData.language
         )
         if (templates.isEmpty()) {
             templates = templateRepository.matchPriorityTwo(
                     templateSelectionData.templateName,
-                    namespace,
                     templateType.value()
             )
             if (templates.isEmpty()) {

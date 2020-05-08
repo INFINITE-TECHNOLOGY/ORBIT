@@ -18,10 +18,9 @@ class UserService {
     @Autowired
     UserRepository userRepository
 
-    User createUser(String namespace, String phone) {
+    User createUser(String phone) {
         try {
             return userRepository.saveAndFlush(new User(
-                    namespace: namespace,
                     phone: phone
             ))
         } catch (Exception exception) {
@@ -29,9 +28,9 @@ class UserService {
         }
     }
 
-    User findByNamespaceAndPhone(String namespace, String phone) {
+    User findByPhone(String phone) {
         try {
-            Set<User> users = userRepository.findByNamespaceAndPhone(namespace, phone)
+            Set<User> users = userRepository.findByPhone(phone)
             if (users.empty) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND)
             }

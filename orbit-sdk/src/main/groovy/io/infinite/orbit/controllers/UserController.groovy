@@ -26,20 +26,20 @@ class UserController {
         userService.validateGuid(guid)
     }
 
-    @GetMapping(value = "/{namespace}/user/{phone}")
+    @GetMapping(value = "/secured/user/{phone}")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    User findByNamespaceAndPhone(@PathVariable("namespace") String namespace, @PathVariable("phone") String phone) {
-        return userService.findByNamespaceAndPhone(namespace, phone)
+    User findByPhone(@PathVariable("phone") String phone) {
+        return userService.findByPhone(phone)
     }
 
-    @PostMapping(value = "/{namespace}/user/{phone}")
+    @PostMapping(value = "/secured/user/{phone}")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    User createUser(@PathVariable("namespace") String namespace, @PathVariable("phone") String phone) {
-        return userService.createUser(namespace, phone)
+    User createUser(@PathVariable("phone") String phone) {
+        return userService.createUser(phone)
     }
 
 }

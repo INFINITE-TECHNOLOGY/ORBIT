@@ -15,8 +15,6 @@ class User {
     @Column(nullable = false)
     Long id
 
-    String namespace
-
     @Column(unique = true)
     UUID guid = UUID.randomUUID()
 

@@ -21,12 +21,11 @@ class UnmanagedSmsController {
     @Autowired
     UnmanagedSmsService unmanagedSmsService
 
-    @PostMapping(value = "/unmanagedSms")
+    @PostMapping(value = "/secured/unmanagedSms")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    void sms(@RequestBody UnmanagedSms unmanagedSms
-    ) {
+    void sms(@RequestBody UnmanagedSms unmanagedSms) {
         unmanagedSmsService.unmanagedSms(unmanagedSms)
     }
 

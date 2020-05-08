@@ -8,7 +8,10 @@ import io.infinite.orbit.entities.PrototypeOtp
 import io.infinite.orbit.repositories.PrototypeOtpRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
 @BlackBox(level = CarburetorLevel.METHOD)
@@ -18,12 +21,11 @@ class PrototypeOtpController {
     @Autowired
     PrototypeOtpRepository prototypeOtpRepository
 
-    @PostMapping(value = "/{namespace}/prototypeOtp")
+    @PostMapping(value = "/secured/prototypeOtp")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    void prototypeOtp(@PathVariable("namespace") String namespace, @RequestBody PrototypeOtp prototypeOtp) {
-        prototypeOtp.namespace = namespace
+    void prototypeOtp(@RequestBody PrototypeOtp prototypeOtp) {
         prototypeOtpRepository.saveAndFlush(prototypeOtp)
     }
 

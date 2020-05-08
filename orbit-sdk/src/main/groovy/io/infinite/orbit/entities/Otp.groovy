@@ -15,8 +15,6 @@ class Otp {
     @Column(nullable = false)
     Long id
 
-    String namespace
-
     UUID guid = UUID.randomUUID()
 
     String otp
