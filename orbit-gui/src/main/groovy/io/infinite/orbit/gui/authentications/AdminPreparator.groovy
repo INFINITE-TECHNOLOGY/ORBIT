@@ -1,11 +1,11 @@
-package io.infinite.orbit.authentications
+package io.infinite.orbit.gui.authentications
 
 import groovy.swing.SwingBuilder
 import io.infinite.ascend.common.exceptions.AscendException
 import io.infinite.ascend.granting.client.authentication.AuthenticationPreparator
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
-import io.infinite.orbit.OrbitGuiApp
+import io.infinite.orbit.gui.OrbitGuiApp
 import org.springframework.stereotype.Service
 
 import javax.annotation.PostConstruct
@@ -49,7 +49,7 @@ class AdminPreparator implements AuthenticationPreparator {
     }
 
     @Override
-    void prepareAuthentication(Map<String, String> publicCredentials, Map<String, String> privateCredentials) {
+    void prepareAuthentication(Map<String, String> publicCredentials, Map<String, String> privateCredentials, Optional<String> prerequisiteJwt) {
         OrbitGuiApp.instance.showPanel(adminAuthenticationPanel)
         if (userInputQueue.take()) {
 

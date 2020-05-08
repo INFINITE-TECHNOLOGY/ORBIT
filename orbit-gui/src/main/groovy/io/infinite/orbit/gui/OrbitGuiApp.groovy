@@ -1,4 +1,4 @@
-package io.infinite.orbit
+package io.infinite.orbit.gui
 
 import groovy.swing.SwingBuilder
 import groovy.util.logging.Slf4j
@@ -98,7 +98,6 @@ class OrbitGuiApp implements ApplicationRunner {
         System.setProperty("ascendValidationUrl", "")
         System.setProperty("ascendClientPublicKeyName", "")
         System.setProperty("ascendClientPrivateKey", "")
-        System.setProperty("orbitUrl", "")
         SpringApplicationBuilder builder = new SpringApplicationBuilder(OrbitGuiApp.class)
         builder.headless(false)
         ConfigurableApplicationContext context = builder.run(args)

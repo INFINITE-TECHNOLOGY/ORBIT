@@ -1,4 +1,4 @@
-package io.infinite.orbit.authentications
+package io.infinite.orbit.gui.authentications
 
 import groovy.json.JsonSlurper
 import groovy.swing.SwingBuilder
@@ -8,7 +8,8 @@ import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.http.HttpException
 import io.infinite.http.HttpRequest
-import io.infinite.orbit.OrbitGuiApp
+import io.infinite.http.SenderDefaultHttps
+import io.infinite.orbit.gui.OrbitGuiApp
 import io.infinite.orbit.other.OrbitException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -34,6 +35,8 @@ class SmsOtpPreparator implements AuthenticationPreparator {
 
     JsonSlurper jsonSlurper = new JsonSlurper()
 
+    SenderDefaultHttps senderDefaultHttps = new SenderDefaultHttps()
+
     @Value('${orbitUrl}')
     String orbitUrl
 
@@ -56,7 +59,7 @@ class SmsOtpPreparator implements AuthenticationPreparator {
     }
 
     @Override
-    void prepareAuthentication(Map<String, String> publicCredentials, Map<String, String> privateCredentials) {
+    void prepareAuthentication(Map<String, String> publicCredentials, Map<String, String> privateCredentials, Optional<String> prerequisiteJwt) {
         OrbitGuiApp.instance.showPanel(adminAuthenticationPanel)
         if (userInputQueue.take()) {
             def managedOtpHandle
@@ -93,7 +96,6 @@ class SmsOtpPreparator implements AuthenticationPreparator {
     }
 
     void commence() {
-        ascendClientPublicKeyName = phoneTextField.text
         userInputQueue.put(true)
     }
 
