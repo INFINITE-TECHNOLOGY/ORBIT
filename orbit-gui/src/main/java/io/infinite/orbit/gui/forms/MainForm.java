@@ -11,10 +11,13 @@ package io.infinite.orbit.gui.forms;
  */
 public class MainForm extends javax.swing.JPanel {
 
+    OrbitModel model;
+
     /**
      * Creates new form MainForm
      */
-    public MainForm() {
+    public MainForm(OrbitModel orbitModel) {
+        this.model = orbitModel;
         initComponents();
     }
 
@@ -40,6 +43,11 @@ public class MainForm extends javax.swing.JPanel {
         jButton4 = new javax.swing.JButton();
 
         jButton1.setText("♻");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 new Object [][] {
@@ -50,7 +58,7 @@ public class MainForm extends javax.swing.JPanel {
                 }
         ) {
             Class[] types = new Class [] {
-                    java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                    java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -86,7 +94,7 @@ public class MainForm extends javax.swing.JPanel {
 
                 },
                 new String [] {
-                        "ID", "GUID", "OTP", "Creation Date", "Expiry Date", "Attempts Count", "Max. Attempts Count", "Duration Seconds"
+                        "ID", "Namespace", "GUID", "OTP", "Creation Date", "Expiry Date", "Attempts Count", "Max. Attempts Count", "Duration Seconds"
                 }
         ) {
             Class[] types = new Class [] {
@@ -134,6 +142,10 @@ public class MainForm extends javax.swing.JPanel {
                                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE))
         );
     }// </editor-fold>
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        model.updateAll();
+    }
 
 
     // Variables declaration - do not modify

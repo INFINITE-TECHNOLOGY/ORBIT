@@ -14,6 +14,7 @@ import io.infinite.http.HttpResponse
 import io.infinite.http.SenderDefaultHttps
 import io.infinite.orbit.entities.User
 import io.infinite.orbit.gui.forms.MainForm
+import io.infinite.orbit.gui.forms.OrbitModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
@@ -49,7 +50,7 @@ import java.awt.*
         "io.infinite.ascend",
         "io.infinite.orbit"
 ])
-class OrbitGuiApp implements ApplicationRunner {
+class OrbitGuiApp implements ApplicationRunner, OrbitModel {
 
     static OrbitGuiApp instance
 
@@ -77,7 +78,7 @@ class OrbitGuiApp implements ApplicationRunner {
 
     static Authorization adminScopeAuthorization
 
-    MainForm mainForm = new MainForm()
+    MainForm mainForm = new MainForm(this)
 
     SwingBuilder swingBuilder = new SwingBuilder()
 
@@ -153,7 +154,6 @@ class OrbitGuiApp implements ApplicationRunner {
             log.debug("Authorized", adminScopeAuthorization)
             showPanel(panel)
             scanAuthorization = true
-            updateAll()
         } catch (Exception e) {
             unauthorized(e.getMessage())
         }
@@ -227,8 +227,9 @@ class OrbitGuiApp implements ApplicationRunner {
 
     void updateAll() {
         DefaultTableModel model = (DefaultTableModel) mainForm.jTable1.getModel()
+        model.rowCount = 0
         getUsers().each {
-            model.addRow([it.id, it.guid, it.creationDate, it.phone])
+            model.addRow(it.id, it.guid.toString(), it.creationDate.toString(), it.phone)
         }
     }
 
