@@ -1,11 +1,11 @@
 package io.infinite.orbit.services
 
-import com.sendgrid.Content
-import com.sendgrid.Email
-import com.sendgrid.Mail
 import com.sendgrid.Request
 import com.sendgrid.Response
 import com.sendgrid.SendGrid
+import com.sendgrid.helpers.mail.Mail
+import com.sendgrid.helpers.mail.objects.Content
+import com.sendgrid.helpers.mail.objects.Email
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
