@@ -8,6 +8,7 @@ import io.infinite.ascend.common.repositories.RefreshRepository
 import io.infinite.ascend.granting.client.services.ClientAuthorizationGrantingService
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
+import io.infinite.orbit.gui.forms.MainForm
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
@@ -156,13 +157,14 @@ class OrbitGuiApp implements ApplicationRunner {
     }
 
     void init() {
-        adminPanel.add(new JLabel("Welcome to Admin Panel."))
+        adminPanel.add(new JLabel("Welcome to Orbit Admin Panel."))
         adminPanel.add(swingBuilder.button(
                 text: "Log out",
                 actionPerformed: {
                     logout()
                 }
         ))
+        adminPanel.add(new MainForm())
         unauthorizedPanel.add(unauthorizedMessageLabel)
         unauthorizedPanel.add(swingBuilder.button(
                 text: "Retry authorization",
