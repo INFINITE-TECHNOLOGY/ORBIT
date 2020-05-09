@@ -107,6 +107,7 @@ class SmsOtpPreparator implements AuthenticationPreparator {
                     cancel()
                 }
         ))
+        OrbitGuiApp.instance.showPanel(panel)
         if (!userInputQueue.take()) {
             throw new OrbitException("Authentication cancelled as per user request")
         }
