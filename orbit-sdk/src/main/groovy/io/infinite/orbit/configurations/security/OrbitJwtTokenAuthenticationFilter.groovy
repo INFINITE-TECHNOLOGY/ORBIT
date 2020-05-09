@@ -3,6 +3,7 @@ package io.infinite.orbit.configurations.security
 import groovy.util.logging.Slf4j
 import io.infinite.ascend.validation.client.services.ClientAuthorizationValidationService
 import io.infinite.blackbox.BlackBox
+import io.infinite.carburetor.CarburetorLevel
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.filter.OncePerRequestFilter
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse
  */
 
 @Slf4j
-@BlackBox
+@BlackBox(level = CarburetorLevel.METHOD)
 @Service
 class OrbitJwtTokenAuthenticationFilter extends OncePerRequestFilter {
 

@@ -77,6 +77,8 @@ class OrbitGuiApp implements ApplicationRunner {
 
     static Authorization adminScopeAuthorization
 
+    MainForm mainForm = new MainForm()
+
     SwingBuilder swingBuilder = new SwingBuilder()
 
     RootPaneContainer frame
@@ -151,6 +153,7 @@ class OrbitGuiApp implements ApplicationRunner {
             log.debug("Authorized", adminScopeAuthorization)
             showPanel(panel)
             scanAuthorization = true
+            updateAll()
         } catch (Exception e) {
             unauthorized(e.getMessage())
         }
@@ -174,11 +177,6 @@ class OrbitGuiApp implements ApplicationRunner {
                     logout()
                 }
         ))
-        MainForm mainForm = new MainForm()
-        DefaultTableModel model = (DefaultTableModel) mainForm.jTable1.getModel()
-        getUsers().each {
-            model.addRow([it.id, it.guid, it.creationDate, it.phone])
-        }
         adminPanel.add(mainForm)
         unauthorizedPanel.add(unauthorizedMessageLabel)
         unauthorizedPanel.add(swingBuilder.button(
@@ -220,11 +218,18 @@ class OrbitGuiApp implements ApplicationRunner {
                         headers: [
                                 "Content-Type" : "application/json",
                                 "Accept"       : "application/json",
-                                "Authorization": "${adminScopeAuthorization.jwt}"
+                                "Authorization": "Bearer ${adminScopeAuthorization.jwt}"
                         ]
                 ), 200
         )
         return objectMapper.readValue(httpResponse.body, User[].class)
+    }
+
+    void updateAll() {
+        DefaultTableModel model = (DefaultTableModel) mainForm.jTable1.getModel()
+        getUsers().each {
+            model.addRow([it.id, it.guid, it.creationDate, it.phone])
+        }
     }
 
 }

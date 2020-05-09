@@ -2,6 +2,7 @@ package io.infinite.orbit.configurations.security
 
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
+import io.infinite.carburetor.CarburetorLevel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse
  */
 @EnableWebSecurity
 @Slf4j
-@BlackBox
+@BlackBox(level = CarburetorLevel.METHOD)
 class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired

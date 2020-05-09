@@ -1,11 +1,12 @@
 package io.infinite.orbit.configurations.security
 
 import io.infinite.blackbox.BlackBox
+import io.infinite.carburetor.CarburetorLevel
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter
 
 import javax.servlet.http.HttpServletRequest
 
-@BlackBox
+@BlackBox(level = CarburetorLevel.METHOD)
 class AscendPreAuthenticatedProcessingFilter extends AbstractPreAuthenticatedProcessingFilter {
 
     @Override
