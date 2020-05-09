@@ -93,6 +93,7 @@ class SmsOtpPreparator implements AuthenticationPreparator {
         }
         box.removeAll()
         box.add(new JLabel("Please enter OTP:"))
+        otpField.text = ""
         box.add(otpField)
         OrbitGuiApp.instance.showPanel(panel)
         box.add(swingBuilder.button(

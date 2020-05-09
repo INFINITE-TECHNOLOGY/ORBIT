@@ -33,11 +33,12 @@ class ValidateOtpService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP validation maximum attempts count exceeded")
             }
             if (actualOtp.otp != managedOtp.otp) {
-                log.debug("$actualOtp.otp != $managedOtp.otp")
                 actualOtp.attemptsCount++
                 otpRepository.saveAndFlush(actualOtp)
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong OTP")
             }
+        } catch (ResponseStatusException responseStatusException) {
+            throw responseStatusException
         } catch (Exception exception) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Exception validating OTP", exception)
         }
