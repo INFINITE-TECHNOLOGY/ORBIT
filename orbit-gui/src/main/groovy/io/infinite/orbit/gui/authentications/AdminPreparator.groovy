@@ -40,9 +40,17 @@ class AdminPreparator implements AuthenticationPreparator {
     @Override
     void prepareAuthentication(Map<String, String> publicCredentials, Map<String, String> privateCredentials, Optional<String> prerequisiteJwt) {
         OrbitGuiApp.instance.showPanel(authorizationPanel)
+        String url
+        if (publicCredentials.containsKey("phone")) {
+            url = "$orbitUrl/orbit/secured/admin/search/findByPhone?phone=${publicCredentials.get("phone")}"
+        } else if (publicCredentials.containsKey("email")) {
+            url = "$orbitUrl/orbit/secured/admin/search/findByEmail?email=${publicCredentials.get("email")}"
+        } else {
+            throw new OrbitException("Missing required public credentials.")
+        }
         HttpResponse httpResponse = senderDefaultHttps.sendHttpMessage(
                 new HttpRequest(
-                        url: "$orbitUrl/orbit/secured/admin/search/findByPhone?phone=${publicCredentials.get("phone")}",
+                        url: url,
                         method: "GET",
                         headers: [
                                 "Content-Type" : "application/json",

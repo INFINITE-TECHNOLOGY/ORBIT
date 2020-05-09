@@ -77,7 +77,7 @@ class EmailOtpPreparator implements AuthenticationPreparator {
                                     "Authorization": "Bearer ${prerequisiteJwt.get()}"
                             ],
                             body: """{
-	"to": "+${emailField.text}",
+	"to": "${emailField.text}",
 	"templateValues": {
 		"action": "Registration"
 	},

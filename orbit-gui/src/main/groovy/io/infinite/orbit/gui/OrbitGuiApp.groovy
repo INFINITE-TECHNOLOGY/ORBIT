@@ -3,6 +3,7 @@ package io.infinite.orbit.gui
 import groovy.swing.SwingBuilder
 import groovy.util.logging.Slf4j
 import io.infinite.ascend.common.entities.Authorization
+import io.infinite.ascend.common.repositories.AuthorizationRepository
 import io.infinite.ascend.granting.client.services.ClientAuthorizationGrantingService
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
@@ -17,10 +18,12 @@ import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
+import javax.annotation.PostConstruct
 import javax.swing.*
 import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.util.concurrent.LinkedBlockingQueue
 
 @BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
@@ -60,6 +63,9 @@ class OrbitGuiApp implements ApplicationRunner {
     @Autowired
     ClientAuthorizationGrantingService clientAuthorizationGrantingService
 
+    @Autowired
+    AuthorizationRepository authorizationRepository
+
     Authorization adminScopeAuthorization
 
     SwingBuilder swingBuilder = new SwingBuilder()
@@ -84,11 +90,7 @@ class OrbitGuiApp implements ApplicationRunner {
 
     JPanel unauthorizedPanel = new JPanel()
 
-    Timer authorizationTimer = new Timer(1000, new ActionListener() {
-        void actionPerformed(ActionEvent actionEvent) {
-            authorized()
-        }
-    })
+    Boolean scanAuthorization = false
 
     static void main(String[] args) {
         System.setProperty("jwtAccessKeyPublic", "")
@@ -101,18 +103,6 @@ class OrbitGuiApp implements ApplicationRunner {
         SpringApplicationBuilder builder = new SpringApplicationBuilder(OrbitGuiApp.class)
         builder.headless(false)
         ConfigurableApplicationContext context = builder.run(args)
-    }
-
-    void authorized() {
-        Thread.start {
-            try {
-                adminScopeAuthorization = clientAuthorizationGrantingService.grantByScope("adminScope", ascendGrantingUrl, "global", "OrbitSaaS")
-                showPanel(adminPanel)
-                authorizationTimer.start()
-            } catch (Exception e) {
-                unauthorized(e.getMessage())
-            }
-        }
     }
 
     void showPanel(JPanel jPanel) {
@@ -131,13 +121,26 @@ class OrbitGuiApp implements ApplicationRunner {
     }
 
     void unauthorized() {
-        authorizationTimer.stop()
+        scanAuthorization = false
         showPanel(unauthorizedPanel)
     }
 
     void retryAuthorization() {
         showPanel(anonymousPanel)
-        authorized()
+        Thread.start {
+            authorized(adminPanel)
+        }
+    }
+
+    void authorized(JPanel panel) {
+        try {
+            adminScopeAuthorization = clientAuthorizationGrantingService.grantByScope("adminScope", ascendGrantingUrl, "global", "OrbitSaaS")
+            log.debug("Authorized", adminScopeAuthorization)
+            showPanel(panel)
+            scanAuthorization = true
+        } catch (Exception e) {
+            unauthorized(e.getMessage())
+        }
     }
 
     @Override
@@ -145,11 +148,19 @@ class OrbitGuiApp implements ApplicationRunner {
         OrbitGuiApp.instance = this
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
         init()
-        authorized()
+        Thread.start {
+            authorized(adminPanel)
+        }
     }
 
     void init() {
         adminPanel.add(new JLabel("Welcome to Admin Panel."))
+        adminPanel.add(swingBuilder.button(
+                text: "Log out",
+                actionPerformed: {
+                    logout()
+                }
+        ))
         unauthorizedPanel.add(unauthorizedMessageLabel)
         unauthorizedPanel.add(swingBuilder.button(
                 text: "Retry authorization",
@@ -157,6 +168,19 @@ class OrbitGuiApp implements ApplicationRunner {
                     retryAuthorization()
                 }
         ))
+        Thread.start {
+            while (true) {
+                if (scanAuthorization) {
+                    authorized(adminPanel)
+                }
+                sleep(1000)
+            }
+        }
+    }
+
+    void logout() {
+        authorizationRepository.deleteAll(authorizationRepository.findByClientNamespace("global"))
+        authorizationRepository.flush()
     }
 
 }
