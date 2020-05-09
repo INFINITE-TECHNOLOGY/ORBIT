@@ -51,9 +51,7 @@ class AdminPreparator implements AuthenticationPreparator {
     @Override
     void prepareAuthentication(Map<String, String> publicCredentials, Map<String, String> privateCredentials, Optional<String> prerequisiteJwt) {
         OrbitGuiApp.instance.showPanel(adminAuthenticationPanel)
-        if (userInputQueue.take()) {
-
-        } else {
+        if (!userInputQueue.take()) {
             throw new AscendException("Authentication cancelled as per user request")
         }
     }

@@ -14,7 +14,6 @@ import io.infinite.orbit.other.OrbitException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
-import javax.annotation.PostConstruct
 import javax.swing.*
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -23,58 +22,60 @@ import java.util.concurrent.LinkedBlockingQueue
 @Service
 class SmsOtpPreparator implements AuthenticationPreparator {
 
-    String ascendClientPrivateKey
-
-    JPanel adminAuthenticationPanel = new JPanel()
+    @Value('${orbitUrl}')
+    String orbitUrl
 
     LinkedBlockingQueue userInputQueue = new LinkedBlockingQueue()
-
-    JTextField phoneTextField = new JTextField(16)
 
     SwingBuilder swingBuilder = new SwingBuilder()
 
     JsonSlurper jsonSlurper = new JsonSlurper()
 
+    JTextField phoneField = new JTextField(32)
+
+    JTextField otpField = new JTextField(32)
+
+    JLabel warningLabel = new JLabel("Incorrect phone format")
+
     SenderDefaultHttps senderDefaultHttps = new SenderDefaultHttps()
 
-    @Value('${orbitUrl}')
-    String orbitUrl
-
-    @PostConstruct
-    void init() {
-        adminAuthenticationPanel.add(new JLabel("Please enter phone:"))
-        adminAuthenticationPanel.add(phoneTextField)
-        adminAuthenticationPanel.add(swingBuilder.button(
+    @Override
+    void prepareAuthentication(Map<String, String> publicCredentials, Map<String, String> privateCredentials, Optional<String> prerequisiteJwt) {
+        Box box = new Box(BoxLayout.Y_AXIS)
+        JPanel panel = new JPanel().add(box).parent as JPanel
+        box.add(new JLabel("Please enter your registered phone:"))
+        box.add(phoneField)
+        warningLabel.visible = false
+        box.add(warningLabel)
+        box.add(swingBuilder.button(
                 text: "Confirm",
                 actionPerformed: {
                     commence()
                 }
         ))
-        adminAuthenticationPanel.add(swingBuilder.button(
+        box.add(swingBuilder.button(
                 text: "Cancel",
                 actionPerformed: {
                     cancel()
                 }
         ))
-    }
-
-    @Override
-    void prepareAuthentication(Map<String, String> publicCredentials, Map<String, String> privateCredentials, Optional<String> prerequisiteJwt) {
-        OrbitGuiApp.instance.showPanel(adminAuthenticationPanel)
-        if (userInputQueue.take()) {
-            def managedOtpHandle
-            try {
-                managedOtpHandle = jsonSlurper.parseText(senderDefaultHttps.expectStatus(
-                        new HttpRequest(
-                                url: "$orbitUrl/orbit/secured/sendOtpSms",
-                                method: "POST",
-                                headers: [
-                                        "Content-Type" : "application/json",
-                                        "Accept"       : "application/json",
-                                        "Authorization": "Bearer ${prerequisiteJwt.get()}"
-                                ],
-                                body: """{
-	"telephone": "+$telephone",
+        OrbitGuiApp.instance.showPanel(panel)
+        if (!userInputQueue.take()) {
+            throw new OrbitException("Authentication cancelled as per user request")
+        }
+        def managedOtpHandle
+        try {
+            managedOtpHandle = jsonSlurper.parseText(senderDefaultHttps.expectStatus(
+                    new HttpRequest(
+                            url: "$orbitUrl/orbit/secured/sendOtpSms",
+                            method: "POST",
+                            headers: [
+                                    "Content-Type" : "application/json",
+                                    "Accept"       : "application/json",
+                                    "Authorization": "Bearer ${prerequisiteJwt.get()}"
+                            ],
+                            body: """{
+	"telephone": "+${phoneField.text}",
 	"templateValues": {
 		"action": "Registration"
 	},
@@ -83,20 +84,43 @@ class SmsOtpPreparator implements AuthenticationPreparator {
 		"language": "eng"
 	}
 }"""
-                        ),
-                        200
-                ).body)
-            } catch (HttpException httpException) {
-                log.warn("OTP sending exception", httpException)
-                throw new OrbitException("Sorry, but there was a problem sending OTP to this phone.")
-            }
-        } else {
+                    ),
+                    200
+            ).body)
+        } catch (HttpException httpException) {
+            log.warn("OTP sending exception", httpException)
+            throw new OrbitException("Sorry, but there was a problem sending OTP to this phone.")
+        }
+        box.removeAll()
+        box.add(new JLabel("Please enter OTP:"))
+        box.add(otpField)
+        OrbitGuiApp.instance.showPanel(panel)
+        box.add(swingBuilder.button(
+                text: "Confirm",
+                actionPerformed: {
+                    commence()
+                }
+        ))
+        box.add(swingBuilder.button(
+                text: "Cancel",
+                actionPerformed: {
+                    cancel()
+                }
+        ))
+        if (!userInputQueue.take()) {
             throw new OrbitException("Authentication cancelled as per user request")
         }
+        publicCredentials.put("phone", phoneField.text)
+        publicCredentials.put("otp", otpField.text)
+        publicCredentials.put("otpGuid", managedOtpHandle.guid as String)
     }
 
     void commence() {
-        userInputQueue.put(true)
+        if (phoneField.text.matches("\\d{5,15}")) {
+            userInputQueue.put(true)
+        } else {
+            warningLabel.visible = true
+        }
     }
 
     void cancel() {
