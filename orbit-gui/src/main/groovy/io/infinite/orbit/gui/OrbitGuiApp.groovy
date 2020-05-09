@@ -19,12 +19,8 @@ import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
-import javax.annotation.PostConstruct
 import javax.swing.*
 import java.awt.*
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
-import java.util.concurrent.LinkedBlockingQueue
 
 @BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
@@ -81,6 +77,8 @@ class OrbitGuiApp implements ApplicationRunner {
     JLabel unauthorizedMessageLabel = new JLabel("Sorry there is an authorization error.")
 
     JPanel anonymousPanel = new JPanel().add(new JLabel("Please wait while we log you in...")).parent as JPanel
+
+    JPanel loginPanel = new JPanel().add(new JLabel("Logged out.")).parent as JPanel
 
     JFrame mainFrame = new JFrame(
             name: "mainFrame",
@@ -172,6 +170,14 @@ class OrbitGuiApp implements ApplicationRunner {
                     retryAuthorization()
                 }
         ))
+        loginPanel.add(swingBuilder.button(
+                text: "Login",
+                actionPerformed: {
+                    Thread.start {
+                        authorized(adminPanel)
+                    }
+                }
+        ))
         Thread.start {
             while (true) {
                 if (scanAuthorization) {
@@ -183,8 +189,10 @@ class OrbitGuiApp implements ApplicationRunner {
     }
 
     void logout() {
+        scanAuthorization = false
         authorizationRepository.deleteAll()
         refreshRepository.deleteAll()
+        showPanel(loginPanel)
     }
 
 }
