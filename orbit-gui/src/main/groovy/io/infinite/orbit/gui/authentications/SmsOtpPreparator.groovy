@@ -37,6 +37,8 @@ class SmsOtpPreparator implements AuthenticationPreparator {
 
     JLabel warningLabel = new JLabel("Incorrect phone format")
 
+    JLabel incorrectOtpLabel = new JLabel("Incorrect OTP")
+
     SenderDefaultHttps senderDefaultHttps = new SenderDefaultHttps()
 
     @Override
@@ -50,7 +52,7 @@ class SmsOtpPreparator implements AuthenticationPreparator {
         box.add(swingBuilder.button(
                 text: "Confirm",
                 actionPerformed: {
-                    commence()
+                    phoneEntered()
                 }
         ))
         box.add(swingBuilder.button(
@@ -75,7 +77,7 @@ class SmsOtpPreparator implements AuthenticationPreparator {
                                     "Authorization": "Bearer ${prerequisiteJwt.get()}"
                             ],
                             body: """{
-	"telephone": "+${phoneField.text}",
+	"telephone": "+${phoneField.text.replace("+", "").replace("(", "").replace(")", "").replace(" ", "")}",
 	"templateValues": {
 		"action": "Registration"
 	},
@@ -95,11 +97,13 @@ class SmsOtpPreparator implements AuthenticationPreparator {
         box.add(new JLabel("Please enter OTP:"))
         otpField.text = ""
         box.add(otpField)
+        incorrectOtpLabel.visible = false
+        box.add(incorrectOtpLabel)
         OrbitGuiApp.instance.showPanel(panel)
         box.add(swingBuilder.button(
                 text: "Confirm",
                 actionPerformed: {
-                    commence()
+                    otpEntered(managedOtpHandle.guid as String)
                 }
         ))
         box.add(swingBuilder.button(
@@ -112,13 +116,21 @@ class SmsOtpPreparator implements AuthenticationPreparator {
         if (!userInputQueue.take()) {
             throw new OrbitException("Authentication cancelled as per user request")
         }
-        publicCredentials.put("phone", phoneField.text)
+        publicCredentials.put("phone", phoneField.text.replace("+", "").replace("(", "").replace(")", "").replace(" ", ""))
         publicCredentials.put("otpGuid", managedOtpHandle.guid as String)
         privateCredentials.put("otp", otpField.text)
     }
 
-    void commence() {
-        if (phoneField.text.matches("\\d{5,15}")) {
+    void otpEntered(String otpGuid) {
+        if (validateOtp(otpGuid, otpField.text) == 200) {
+            userInputQueue.put(true)
+        } else {
+            incorrectOtpLabel.visible = true
+        }
+    }
+
+    void phoneEntered() {
+        if (phoneField.text.replace("+", "").replace("(", "").replace(")", "").replace(" ", "").matches("\\d{5,15}")) {
             userInputQueue.put(true)
         } else {
             warningLabel.visible = true
@@ -127,6 +139,23 @@ class SmsOtpPreparator implements AuthenticationPreparator {
 
     void cancel() {
         userInputQueue.put(false)
+    }
+
+    Integer validateOtp(String guid, String userOtp) {
+        return senderDefaultHttps.sendHttpMessage(
+                new HttpRequest(
+                        url: "https://orbit-secured.herokuapp.com/orbit/public/validateOtp",
+                        method: "POST",
+                        headers: [
+                                "Content-Type": "application/json",
+                                "Accept"      : "application/json"
+                        ],
+                        body: """{
+	"guid": "$guid",
+	"otp": "$userOtp"
+}"""
+                )
+        ).status
     }
 
 }

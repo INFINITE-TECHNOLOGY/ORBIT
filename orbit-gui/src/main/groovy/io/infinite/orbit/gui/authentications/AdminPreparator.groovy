@@ -1,68 +1,66 @@
 package io.infinite.orbit.gui.authentications
 
+import groovy.json.JsonSlurper
 import groovy.swing.SwingBuilder
-import io.infinite.ascend.common.exceptions.AscendException
+import groovy.util.logging.Slf4j
 import io.infinite.ascend.granting.client.authentication.AuthenticationPreparator
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
+import io.infinite.http.HttpRequest
+import io.infinite.http.HttpResponse
+import io.infinite.http.SenderDefaultHttps
 import io.infinite.orbit.gui.OrbitGuiApp
+import io.infinite.orbit.other.OrbitException
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 import javax.annotation.PostConstruct
 import javax.swing.*
-import java.awt.*
+import java.awt.Dimension
 import java.util.concurrent.LinkedBlockingQueue
 
 @BlackBox(level = CarburetorLevel.METHOD)
+@Slf4j
 @Service
 class AdminPreparator implements AuthenticationPreparator {
 
-    String ascendClientPublicKeyName
+    @Value('${orbitUrl}')
+    String orbitUrl
 
-    String ascendClientPrivateKey
+    Box box = new Box(BoxLayout.Y_AXIS)
 
-    JPanel adminAuthenticationPanel = new JPanel()
+    JLabel messageLabel = box.add(new JLabel("Pre-authenticating...")) as JLabel
 
-    LinkedBlockingQueue userInputQueue = new LinkedBlockingQueue()
+    JPanel authorizationPanel = new JPanel().add(box).parent as JPanel
 
-    JTextField ascendClientPublicKeyNameTextField = new JTextField(16)
+    SenderDefaultHttps senderDefaultHttps = new SenderDefaultHttps()
 
-    SwingBuilder swingBuilder = new SwingBuilder()
-
-    @PostConstruct
-    void init() {
-        adminAuthenticationPanel.add(new JLabel("Please enter Ascend Client Private Key Name:"))
-        adminAuthenticationPanel.add(ascendClientPublicKeyNameTextField)
-        adminAuthenticationPanel.add(swingBuilder.button(
-                text: "Confirm",
-                actionPerformed: {
-                    commence()
-                }
-        ))
-        adminAuthenticationPanel.add(swingBuilder.button(
-                text: "Cancel",
-                actionPerformed: {
-                    cancel()
-                }
-        ))
-        adminAuthenticationPanel.add(new JLabel("Powered by Ascend.rest"), BorderLayout.SOUTH)
-    }
+    JsonSlurper jsonSlurper = new JsonSlurper()
 
     @Override
     void prepareAuthentication(Map<String, String> publicCredentials, Map<String, String> privateCredentials, Optional<String> prerequisiteJwt) {
-        OrbitGuiApp.instance.showPanel(adminAuthenticationPanel)
-        if (!userInputQueue.take()) {
-            throw new AscendException("Authentication cancelled as per user request")
+        OrbitGuiApp.instance.showPanel(authorizationPanel)
+        HttpResponse httpResponse = senderDefaultHttps.sendHttpMessage(
+                new HttpRequest(
+                        url: "$orbitUrl/orbit/secured/admin/search/findByPhone?phone=${publicCredentials.get("phone")}",
+                        method: "GET",
+                        headers: [
+                                "Content-Type" : "application/json",
+                                "Accept"       : "application/json",
+                                "Authorization": "Bearer ${prerequisiteJwt.get()}"
+                        ]
+                )
+        )
+        String adminGuid
+        if (httpResponse.status == 404) {
+            throw new OrbitException("Pre-authentication failed. This phone is not registered for Admin authentication.")
+        } else if (httpResponse.status == 200) {
+            messageLabel.text = "Pre-authentication successful. Requesting authorization..."
+            adminGuid = jsonSlurper.parseText(httpResponse.body).guid
+        } else {
+            throw new OrbitException("Sorry, there was a problem during pre-authentication.")
         }
-    }
-
-    void commence() {
-        ascendClientPublicKeyName = ascendClientPublicKeyNameTextField.text
-        userInputQueue.put(true)
-    }
-
-    void cancel() {
-        userInputQueue.put(false)
+        publicCredentials.put("adminGuid", adminGuid)
     }
 
 }
