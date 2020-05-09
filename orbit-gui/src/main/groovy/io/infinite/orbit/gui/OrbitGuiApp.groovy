@@ -4,6 +4,7 @@ import groovy.swing.SwingBuilder
 import groovy.util.logging.Slf4j
 import io.infinite.ascend.common.entities.Authorization
 import io.infinite.ascend.common.repositories.AuthorizationRepository
+import io.infinite.ascend.common.repositories.RefreshRepository
 import io.infinite.ascend.granting.client.services.ClientAuthorizationGrantingService
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
@@ -65,6 +66,9 @@ class OrbitGuiApp implements ApplicationRunner {
 
     @Autowired
     AuthorizationRepository authorizationRepository
+
+    @Autowired
+    RefreshRepository refreshRepository
 
     Authorization adminScopeAuthorization
 
@@ -179,8 +183,8 @@ class OrbitGuiApp implements ApplicationRunner {
     }
 
     void logout() {
-        authorizationRepository.deleteAll(authorizationRepository.findByClientNamespace("global"))
-        authorizationRepository.flush()
+        authorizationRepository.deleteAll()
+        refreshRepository.deleteAll()
     }
 
 }
