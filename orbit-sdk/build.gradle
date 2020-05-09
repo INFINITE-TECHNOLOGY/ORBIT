@@ -42,7 +42,7 @@ dependencies {
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.8'
     compile 'io.i-t:ascend-sdk:0.6.3'
     compile group: "com.twilio.sdk", name: "twilio", version: "7.42.0"
-    compile 'com.sendgrid:sendgrid-java:3.0.9'
+    compile 'com.sendgrid:sendgrid-java:4.4.8'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
 }
 
