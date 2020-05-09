@@ -113,8 +113,8 @@ class SmsOtpPreparator implements AuthenticationPreparator {
             throw new OrbitException("Authentication cancelled as per user request")
         }
         publicCredentials.put("phone", phoneField.text)
-        publicCredentials.put("otp", otpField.text)
         publicCredentials.put("otpGuid", managedOtpHandle.guid as String)
+        privateCredentials.put("otp", otpField.text)
     }
 
     void commence() {
