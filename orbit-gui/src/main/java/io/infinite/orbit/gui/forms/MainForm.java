@@ -46,7 +46,7 @@ public class MainForm extends javax.swing.JPanel {
 
                 },
                 new String [] {
-                        "ID", "Namespace", "GUID", "Creation Date", "Phone"
+                        "ID", "GUID", "Creation Date", "Phone"
                 }
         ) {
             Class[] types = new Class [] {
@@ -86,7 +86,7 @@ public class MainForm extends javax.swing.JPanel {
 
                 },
                 new String [] {
-                        "ID", "Namespace", "GUID", "OTP", "Creation Date", "Expiry Date", "Attempts Count", "Max. Attempts Count", "Duration Seconds"
+                        "ID", "GUID", "OTP", "Creation Date", "Expiry Date", "Attempts Count", "Max. Attempts Count", "Duration Seconds"
                 }
         ) {
             Class[] types = new Class [] {
@@ -137,16 +137,16 @@ public class MainForm extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
+    public javax.swing.JButton jButton1;
+    public javax.swing.JButton jButton2;
+    public javax.swing.JButton jButton3;
+    public javax.swing.JButton jButton4;
+    public javax.swing.JScrollPane jScrollPane1;
+    public javax.swing.JScrollPane jScrollPane2;
+    public javax.swing.JScrollPane jScrollPane3;
+    public javax.swing.JTabbedPane jTabbedPane1;
+    public javax.swing.JTable jTable1;
+    public javax.swing.JTable jTable2;
+    public javax.swing.JTable jTable3;
     // End of variables declaration
 }

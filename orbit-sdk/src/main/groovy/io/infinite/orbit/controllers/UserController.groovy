@@ -5,6 +5,7 @@ import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.orbit.entities.User
+import io.infinite.orbit.repositories.UserRepository
 import io.infinite.orbit.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -17,6 +18,9 @@ class UserController {
 
     @Autowired
     UserService userService
+
+    @Autowired
+    UserRepository userRepository
 
     @PostMapping(value = "/public/validateUserGuid/{guid}")
     @ResponseBody
@@ -40,6 +44,14 @@ class UserController {
     @CrossOrigin
     User createUser(@PathVariable("phone") String phone) {
         return userService.createUser(phone)
+    }
+
+    @GetMapping(value = "/secured/admin/users")
+    @ResponseBody
+    @CompileDynamic
+    @CrossOrigin
+    Set<User> users() {
+        return userRepository.findAll()
     }
 
 }

@@ -1,5 +1,6 @@
 package io.infinite.orbit.gui
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.swing.SwingBuilder
 import groovy.util.logging.Slf4j
 import io.infinite.ascend.common.entities.Authorization
@@ -8,6 +9,10 @@ import io.infinite.ascend.common.repositories.RefreshRepository
 import io.infinite.ascend.granting.client.services.ClientAuthorizationGrantingService
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
+import io.infinite.http.HttpRequest
+import io.infinite.http.HttpResponse
+import io.infinite.http.SenderDefaultHttps
+import io.infinite.orbit.entities.User
 import io.infinite.orbit.gui.forms.MainForm
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -21,6 +26,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 import javax.swing.*
+import javax.swing.table.DefaultTableModel
 import java.awt.*
 
 @BlackBox(level = CarburetorLevel.METHOD)
@@ -67,7 +73,9 @@ class OrbitGuiApp implements ApplicationRunner {
     @Autowired
     RefreshRepository refreshRepository
 
-    Authorization adminScopeAuthorization
+    ObjectMapper objectMapper = new ObjectMapper()
+
+    static Authorization adminScopeAuthorization
 
     SwingBuilder swingBuilder = new SwingBuilder()
 
@@ -80,6 +88,8 @@ class OrbitGuiApp implements ApplicationRunner {
     JPanel anonymousPanel = new JPanel().add(new JLabel("Please wait while we log you in...")).parent as JPanel
 
     JPanel loginPanel = new JPanel().add(new JLabel("Logged out.")).parent as JPanel
+
+    SenderDefaultHttps senderDefaultHttps = new SenderDefaultHttps()
 
     JFrame mainFrame = new JFrame(
             name: "mainFrame",
@@ -164,7 +174,12 @@ class OrbitGuiApp implements ApplicationRunner {
                     logout()
                 }
         ))
-        adminPanel.add(new MainForm())
+        MainForm mainForm = new MainForm()
+        DefaultTableModel model = (DefaultTableModel) mainForm.jTable1.getModel()
+        getUsers().each {
+            model.addRow([it.id, it.guid, it.creationDate, it.phone])
+        }
+        adminPanel.add(mainForm)
         unauthorizedPanel.add(unauthorizedMessageLabel)
         unauthorizedPanel.add(swingBuilder.button(
                 text: "Retry authorization",
@@ -195,6 +210,21 @@ class OrbitGuiApp implements ApplicationRunner {
         authorizationRepository.deleteAll()
         refreshRepository.deleteAll()
         showPanel(loginPanel)
+    }
+
+    User[] getUsers() {
+        HttpResponse httpResponse = senderDefaultHttps.expectStatus(
+                new HttpRequest(
+                        url: "https://orbit-secured.herokuapp.com/orbit/secured/admin/users",
+                        method: "GET",
+                        headers: [
+                                "Content-Type" : "application/json",
+                                "Accept"       : "application/json",
+                                "Authorization": "${adminScopeAuthorization.jwt}"
+                        ]
+                ), 200
+        )
+        return objectMapper.readValue(httpResponse.body, User[].class)
     }
 
 }
