@@ -32,8 +32,8 @@ class HistoryService {
                         url: "$crmUrl/external/extended",
                         method: "POST",
                         headers: [
-                                "Content-Type": "application/json",
-                                "Accept"      : "application/json",
+                                "Content-Type": "application/xml",
+                                "Accept"      : "application/xml",
                                 "X-Signature" : crmToken
                         ],
                         body: """<request point="12345">
@@ -44,7 +44,7 @@ offset="1000"/>
 </request>"""
                 ), 200
         )
-        return objectMapper.readValue(httpResponse.body, HistoryRecord[].class)
+        return []
     }
 
 
