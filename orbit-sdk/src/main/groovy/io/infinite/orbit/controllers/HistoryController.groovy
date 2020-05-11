@@ -27,7 +27,7 @@ class HistoryController {
     HistoryService historyService
 
 
-    @GetMapping(value = "/secured/secured/user/{userGuid}/history")
+    @GetMapping(value = "/secured/user/{userGuid}/history")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
