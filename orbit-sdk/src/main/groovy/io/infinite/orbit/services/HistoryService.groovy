@@ -64,11 +64,6 @@ class HistoryService {
         return []
     }
 
-    String body = """<request point="12345">
-<reconciliation begin="2007-10-12T12:00:00+0300"
-end="2007-10-13T12:00:00+0300"
-payments="1"
-offset="1000"/>
-</request>"""
+    String body = """<request point="12345"><reconciliation begin="2007-10-12T12:00:00+0300" end="2007-10-13T12:00:00+0300" payments="1" offset="1000"/></request>"""
 
 }
