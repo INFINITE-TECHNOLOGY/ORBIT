@@ -56,9 +56,9 @@ class HistoryService {
                         headers: [
                                 "Content-Type": "text/xml;charset=UTF-8",
                                 "Accept"      : "text/xml;charset=UTF-8",
-                                "X-Signature" : sign("$crmUrl/external/extended?$body")
+                                "x-signature" : sign(body)
                         ],
-                        body: null
+                        body: body
                 ), 200
         )
         return []
