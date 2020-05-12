@@ -51,15 +51,14 @@ class HistoryService {
     Set<HistoryRecord> getHistory(String userGuid) {
         HttpResponse httpResponse = senderDefaultHttps.expectStatus(
                 new HttpRequest(
-                        url: "$crmUrl/external/extended",
+                        url: "$crmUrl/external/extended?$body",
                         method: "POST",
                         headers: [
                                 "Content-Type": "text/xml;charset=UTF-8",
                                 "Accept"      : "text/xml;charset=UTF-8",
-                                "X-Signature" : sign(body),
-                                "Authorization" : sign(body)
+                                "X-Signature" : sign("$crmUrl/external/extended?$body")
                         ],
-                        body: body
+                        body: null
                 ), 200
         )
         return []
