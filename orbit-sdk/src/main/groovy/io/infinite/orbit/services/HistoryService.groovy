@@ -16,6 +16,8 @@ import java.security.PrivateKey
 import java.security.Signature
 import java.security.spec.PKCS8EncodedKeySpec
 
+import org.apache.commons.codec.binary.Base64
+
 @Controller
 @BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
@@ -37,7 +39,7 @@ class HistoryService {
         Signature signature = Signature.getInstance("SHA1withRSA")
         signature.initSign(privateKey)
         signature.update(message.getBytes("UTF-8"))
-        return signature.sign().encodeBase64()
+        return new String(Base64.encodeBase64(signature.sign()),"UTF-8")
     }
 
     PrivateKey getPrivateKey() throws Exception {
