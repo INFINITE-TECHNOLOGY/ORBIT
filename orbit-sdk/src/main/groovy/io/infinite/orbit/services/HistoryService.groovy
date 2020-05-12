@@ -2,18 +2,19 @@ package io.infinite.orbit.services
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.util.logging.Slf4j
-import io.infinite.ascend.common.services.JwtService
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.http.HttpRequest
 import io.infinite.http.HttpResponse
 import io.infinite.http.SenderDefaultHttps
 import io.infinite.orbit.model.HistoryRecord
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 
+import java.security.KeyFactory
+import java.security.PrivateKey
 import java.security.Signature
+import java.security.spec.PKCS8EncodedKeySpec
 
 @Controller
 @BlackBox(level = CarburetorLevel.METHOD)
@@ -30,13 +31,19 @@ class HistoryService {
     @Value('${crmPrivateKey}')
     String crmPrivateKey
 
-    JwtService jwtService = new JwtService()
+    PrivateKey privateKey = getPrivateKey()
 
     String sign(String message) {
-        Signature signature = Signature.getInstance("SHA1withRSA");
-        signature.initSign(jwtService.loadPrivateKeyFromHexString(crmPrivateKey))
-        signature.update(message.getBytes("UTF-8"));
+        Signature signature = Signature.getInstance("SHA1withRSA")
+        signature.initSign(privateKey)
+        signature.update(message.getBytes("UTF-8"))
         return signature.sign().encodeBase64()
+    }
+
+    PrivateKey getPrivateKey() throws Exception {
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(System.getenv("crmPrivateKey").decodeBase64())
+        KeyFactory kf = KeyFactory.getInstance("RSA")
+        return kf.generatePrivate(spec)
     }
 
     Set<HistoryRecord> getHistory(String userGuid) {
@@ -55,7 +62,7 @@ class HistoryService {
         return []
     }
 
-    String body =  """<request point="12345">
+    String body = """<request point="12345">
 <reconciliation begin="2007-10-12T12:00:00+0300"
 end="2007-10-13T12:00:00+0300"
 payments="1"
