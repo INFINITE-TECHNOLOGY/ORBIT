@@ -30,8 +30,7 @@ class HistoryService {
     @Value('${crmPrivateKey}')
     String crmPrivateKey
 
-    @Autowired
-    JwtService jwtService
+    JwtService jwtService = new JwtService()
 
     String sign(String message) {
         Signature signature = Signature.getInstance("SHA1withRSA");
