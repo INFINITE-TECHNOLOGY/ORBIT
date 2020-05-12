@@ -56,7 +56,7 @@ class HistoryService {
                         headers: [
                                 "Content-Type": "application/xml",
                                 "Accept"      : "application/xml",
-                                "X-Signature" : sign(body)
+                                "X-Signature" : sign("x")
                         ],
                         body: body
                 ), 200
