@@ -54,8 +54,8 @@ class HistoryService {
                         url: "$crmUrl/external/extended",
                         method: "POST",
                         headers: [
-                                "Content-Type": "application/xml; charset=UTF-8",
-                                "Accept"      : "application/xml",
+                                "Content-Type": "text/xml;charset=UTF-8",
+                                "Accept"      : "text/xml;charset=UTF-8",
                                 "X-Signature" : sign(body)
                         ],
                         body: body
