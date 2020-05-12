@@ -45,6 +45,7 @@ dependencies {
     compile group: "com.twilio.sdk", name: "twilio", version: "7.42.0"
     compile 'com.sendgrid:sendgrid-java:4.4.8'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.14'
 }
 
 task sourceJar(type: Jar) {
