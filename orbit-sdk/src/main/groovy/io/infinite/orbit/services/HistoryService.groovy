@@ -54,9 +54,9 @@ class HistoryService {
                         url: "$crmUrl/external/extended",
                         method: "POST",
                         headers: [
-                                "Content-Type": "application/xml",
+                                "Content-Type": "application/xml;charset=UTF-8",
                                 "Accept"      : "application/xml",
-                                "X-Signature" : sign("x")
+                                "X-Signature" : sign(body)
                         ],
                         body: body
                 ), 200
@@ -64,6 +64,11 @@ class HistoryService {
         return []
     }
 
-    String body = "w"
+    String body = """<request point="12345">
+<reconciliation begin="2007-10-12T12:00:00+0300"
+end="2007-10-13T12:00:00+0300"
+payments="1"
+offset="1000"/>
+</request>"""
 
 }
