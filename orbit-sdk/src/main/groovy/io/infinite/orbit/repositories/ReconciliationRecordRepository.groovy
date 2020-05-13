@@ -8,7 +8,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource
 @RepositoryRestResource(exported = false)
 interface ReconciliationRecordRepository extends JpaRepository<ReconciliationRecord, Long> {
 
-    @Query("""select max(r.downloadDate) from ReconciliationRecord """)
+    @Query("""select max(r.downloadDate) from ReconciliationRecord r""")
     Optional<Date> lastDownloadDate()
 
 }
