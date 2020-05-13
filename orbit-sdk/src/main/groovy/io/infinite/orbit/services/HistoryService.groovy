@@ -56,10 +56,7 @@ class HistoryService {
                         headers: [
                                 "Content-Type": "text/xml;charset=UTF-8",
                                 "Accept"      : "text/xml;charset=UTF-8",
-                                "x-request-id": "1484010287",
-                                "x-device-id": "05a18f38-c218-4d1c-a9d0-ac36763580e1",
-                                "x-content-digest": body.digest("SHA-1"),
-                                "x-signature" : sign("1484010287" + "05a18f38-c218-4d1c-a9d0-ac36763580e1" + body.digest("SHA-1"))
+                                "X-Signature" : sign(body)
                         ],
                         body: body
                 ), 200
@@ -67,6 +64,6 @@ class HistoryService {
         return []
     }
 
-    String body = """<request point="12345"><reconciliation begin="2007-10-12T12:00:00+0300" end="2007-10-13T12:00:00+0300" payments="1" offset="1000"/></request>"""
+    String body = """<request point="315"><reconciliation begin="2007-10-12T12:00:00+0300" end="2007-10-13T12:00:00+0300" payments="1" offset="1000"/></request>"""
 
 }
