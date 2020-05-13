@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
@@ -21,14 +22,15 @@ class HistoryController {
     @Autowired
     HistoryService historyService
 
-
     @GetMapping(value = "/secured/user/{userGuid}/history")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    Set<HistoryRecord> getHistory(@PathVariable("userGuid") String userGuid) {
-        return historyService.getHistory(userGuid)
+    Set<HistoryRecord> getHistory(
+            @PathVariable("userGuid") String userGuid,
+            @RequestParam("tranCount") Optional<String> tranCount
+    ) {
+        return historyService.getHistory(userGuid, tranCount)
     }
-
 
 }
