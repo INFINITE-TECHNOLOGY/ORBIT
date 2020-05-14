@@ -7,12 +7,12 @@ import io.infinite.carburetor.CarburetorLevel
 import io.infinite.http.HttpResponse
 import io.infinite.orbit.entities.ReconciliationRecord
 import io.infinite.orbit.model.HistoryRecord
+import io.infinite.orbit.other.OrbitException
 import io.infinite.orbit.repositories.ReconciliationRecordRepository
 import org.apache.commons.lang3.time.FastDateFormat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 
-import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -81,9 +81,13 @@ class HistoryService extends CrmServiceBase {
         )
     }
 
-    Set<HistoryRecord> getHistory(String userGuid, Optional<String> tranCount) {
+    Set<HistoryRecord> getHistory(String phone, Optional<String> tranCount) {
         downloadHistory()
-        List<ReconciliationRecord> reconciliationRecordList = reconciliationRecordRepository.findByUserGuid(userGuid)
+        if (!phone.startsWith("1")) {
+            throw new OrbitException("Only USA phone country code is supported at the moment")
+        }
+        String account = phone.substring(1)
+        List<ReconciliationRecord> reconciliationRecordList = reconciliationRecordRepository.findByAccount(account)
         if (tranCount.present) {
             return reconciliationRecordList.collect { convertToHistoryRecord(it) }[0..new Integer(tranCount.get()) - 1].reverse()
         } else {

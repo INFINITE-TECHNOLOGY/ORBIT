@@ -22,15 +22,15 @@ class HistoryController {
     @Autowired
     HistoryService historyService
 
-    @GetMapping(value = "/secured/user/{userGuid}/history")
+    @GetMapping(value = "/secured/user/{phone}/history")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
     Set<HistoryRecord> getHistory(
-            @PathVariable("userGuid") String userGuid,
+            @PathVariable("phone") String phone,
             @RequestParam("tranCount") Optional<String> tranCount
     ) {
-        return historyService.getHistory(userGuid, tranCount)
+        return historyService.getHistory(phone, tranCount)
     }
 
 }
