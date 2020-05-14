@@ -41,7 +41,7 @@ class HistoryService extends CrmServiceBase {
 </request>""")
             def response = xmlSlurper.parseText(httpResponse.body)
             if (response.result.@count.toInteger() > 0) {
-                reconciliationRecordRepository.saveAll(response.result.payment.collect { convert(it) })
+                reconciliationRecordRepository.saveAll(response.result.payment.collect { convertToReconciliationRecord(it) })
                 offset++
             } else {
                 break
@@ -49,7 +49,7 @@ class HistoryService extends CrmServiceBase {
         }
     }
 
-    ReconciliationRecord convert(def xmlRecord) {
+    ReconciliationRecord convertToReconciliationRecord(def xmlRecord) {
         return new ReconciliationRecord(
                 crmId: xmlRecord.@id,
                 date: LocalDate.parse(xmlRecord.@date.toString(), dateFormatter).toDate(),
@@ -70,9 +70,17 @@ class HistoryService extends CrmServiceBase {
         )
     }
 
+    HistoryRecord convertToHistoryRecord(ReconciliationRecord reconciliationRecord) {
+        return new HistoryRecord(
+                date: reconciliationRecord.date,
+                amount: Long.valueOf(reconciliationRecord.sum),
+                currency: "USD"
+        )
+    }
+
     Set<HistoryRecord> getHistory(String userGuid, Optional<String> tranCount) {
         downloadHistory()
-        return []
+        return reconciliationRecordRepository.findAll().collect { convertToHistoryRecord(it) }
     }
 
 }
