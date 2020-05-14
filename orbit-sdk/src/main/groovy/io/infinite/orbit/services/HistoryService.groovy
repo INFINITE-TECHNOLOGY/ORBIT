@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter
 @Controller
 @BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
+@CompileDynamic
 class HistoryService extends CrmServiceBase {
 
     @Autowired
@@ -28,7 +29,6 @@ class HistoryService extends CrmServiceBase {
     XmlSlurper xmlSlurper = new XmlSlurper()
 
     @PostConstruct
-    @CompileDynamic
     void downloadHistory() {
         Optional<Date> dateFrom = reconciliationRecordRepository.lastDownloadDate()
         Integer resultCount = 0
