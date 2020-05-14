@@ -15,7 +15,7 @@ class ReconciliationRecord {
     @Column(nullable = false)
     Long id
 
-    Date downloadDate
+    Date downloadDate = new Date()
 
     String crmId
     Date date
