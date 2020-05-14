@@ -32,7 +32,7 @@ class HistoryService extends CrmServiceBase {
     @PostConstruct
     void downloadHistory() {
         Optional<Date> dateFrom = reconciliationRecordRepository.lastDownloadDate()
-        Integer resultCount = 0
+        Integer resultCount = null
         Integer page = 1
         while (resultCount != 0) {
             HttpResponse httpResponse = crmRequest("""<request point="315">
