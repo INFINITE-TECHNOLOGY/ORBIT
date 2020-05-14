@@ -32,9 +32,8 @@ class HistoryService extends CrmServiceBase {
     @PostConstruct
     void downloadHistory() {
         Optional<Date> dateFrom = reconciliationRecordRepository.lastDownloadDate()
-        Integer count = 1
         Integer page = 1
-        while (count > 0) {
+        while (true) {
             HttpResponse httpResponse = crmRequest("""<request point="315">
     <reconciliation 
     begin="${dateFrom.present ? dateFormatter.format(dateFrom.get().toInstant()) : "2020-01-01T00:00:00+0300"}" 
@@ -43,11 +42,12 @@ class HistoryService extends CrmServiceBase {
     offset="$page"/>
 </request>""")
             def response = xmlSlurper.parseText(httpResponse.body)
-            count = response.result.@count.toInteger()
-            if (resultCount > 0) {
+            if (response.result.@count.toInteger() > 0) {
                 reconciliationRecordRepository.saveAll(response.result.payment.collect { convert(it) })
+                page++
+            } else {
+                break
             }
-            page++
         }
     }
 
