@@ -37,7 +37,7 @@ class HistoryService extends CrmServiceBase {
         while (true) {
             HttpResponse httpResponse = crmRequest("""<request point="315">
     <reconciliation 
-    begin="${dateFrom.present ? fastDateFormat.format(dateFrom) : "2020-01-01T00:00:00+0300"}" 
+    begin="${dateFrom.present ? fastDateFormat.format(dateFrom.get()) : "2020-01-01T00:00:00+0300"}" 
     end="${dateFormatter.format(ZonedDateTime.now())}" 
     payments="1" 
     offset="${(offset * 1000) + 1}"/>
@@ -55,7 +55,7 @@ class HistoryService extends CrmServiceBase {
     ReconciliationRecord convertToReconciliationRecord(def xmlRecord) {
         return new ReconciliationRecord(
                 crmId: xmlRecord.@id,
-                date: fastDateFormat.parse(xmlRecord.@date.toString()),
+                date: fastDateFormat.parse(xmlRecord.@date.toString()).toInstant().toDate(),
                 state: xmlRecord.@state,
                 substate: xmlRecord.@substate,
                 code: xmlRecord.@code,
