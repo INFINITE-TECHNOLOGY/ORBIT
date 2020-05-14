@@ -33,7 +33,7 @@ class HistoryService extends CrmServiceBase {
     begin="${dateFrom.present ? dateFormatter.format(dateFrom.get().toInstant()) : "2020-01-01T00:00:00+0300"}" 
     end="${dateFormatter.format(ZonedDateTime.now())}" 
     payments="1" 
-    offset="1000"/>
+    offset="5"/>
 </request>""")
     }
 
