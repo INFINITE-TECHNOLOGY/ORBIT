@@ -5,6 +5,7 @@ import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.http.HttpResponse
+import io.infinite.orbit.entities.ReconciliationRecord
 import io.infinite.orbit.model.HistoryRecord
 import io.infinite.orbit.repositories.ReconciliationRecordRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -41,10 +42,33 @@ class HistoryService extends CrmServiceBase {
     offset="$page"/>
 </request>""")
             def xmlResponse = xmlSlurper.parseText(httpResponse.body)
-            resultCount = xmlResponse.response.result.@count
+            resultCount = xmlResponse.response.result.@count.toInteger()
+            if (resultCount > 0) {
+                reconciliationRecordRepository.saveAll(xmlResponse.response.result.payment.collect {convert(it)})
+            }
             page++
-            log.debug(">>>>>>>$resultCount")
         }
+    }
+
+    ReconciliationRecord convert(def xmlRecord) {
+        return new ReconciliationRecord(
+                crmId: xmlRecord.id,
+                date: xmlRecord.date,
+                state: xmlRecord.state,
+                substate: xmlRecord.substate,
+                code: xmlRecord.code,
+                crmFinal: xmlRecord.final,
+                trans: xmlRecord.trans,
+                sum: xmlRecord.sum,
+                service: xmlRecord.service,
+                market: xmlRecord.market,
+                dealer: xmlRecord.dealer,
+                branch: xmlRecord.branch,
+                id_point: xmlRecord.id_point,
+                account: xmlRecord.account,
+                tender: xmlRecord.tender,
+                payment_type: xmlRecord.payment_type
+        )
     }
 
     Set<HistoryRecord> getHistory(String userGuid, Optional<String> tranCount) {
