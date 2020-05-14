@@ -41,10 +41,10 @@ class HistoryService extends CrmServiceBase {
     payments="1" 
     offset="$page"/>
 </request>""")
-            def xmlResponse = xmlSlurper.parseText(httpResponse.body)
-            resultCount = xmlResponse.response.result.@count.toInteger()
+            def response = xmlSlurper.parseText(httpResponse.body)
+            resultCount = response.result.@count.toInteger()
             if (resultCount > 0) {
-                reconciliationRecordRepository.saveAll(xmlResponse.response.result.payment.collect {convert(it)})
+                reconciliationRecordRepository.saveAll(response.result.payment.collect {convert(it)})
             }
             page++
         }
@@ -52,22 +52,22 @@ class HistoryService extends CrmServiceBase {
 
     ReconciliationRecord convert(def xmlRecord) {
         return new ReconciliationRecord(
-                crmId: xmlRecord.id,
-                date: xmlRecord.date,
-                state: xmlRecord.state,
-                substate: xmlRecord.substate,
-                code: xmlRecord.code,
-                crmFinal: xmlRecord.final,
-                trans: xmlRecord.trans,
-                sum: xmlRecord.sum,
-                service: xmlRecord.service,
-                market: xmlRecord.market,
-                dealer: xmlRecord.dealer,
-                branch: xmlRecord.branch,
-                id_point: xmlRecord.id_point,
-                account: xmlRecord.account,
-                tender: xmlRecord.tender,
-                payment_type: xmlRecord.payment_type
+                crmId: xmlRecord.@id,
+                date: xmlRecord.@date,
+                state: xmlRecord.@state,
+                substate: xmlRecord.@substate,
+                code: xmlRecord.@code,
+                crmFinal: xmlRecord.@final,
+                trans: xmlRecord.@trans,
+                sum: xmlRecord.@sum,
+                service: xmlRecord.@service,
+                market: xmlRecord.@market,
+                dealer: xmlRecord.@dealer,
+                branch: xmlRecord.@branch,
+                id_point: xmlRecord.@id_point,
+                account: xmlRecord.@account,
+                tender: xmlRecord.@tender,
+                payment_type: xmlRecord.@payment_type
         )
     }
 
