@@ -30,14 +30,14 @@ class HistoryService extends CrmServiceBase {
 
     void downloadHistory() {
         Optional<Date> dateFrom = reconciliationRecordRepository.lastDownloadDate()
-        Integer offset = 1
+        Integer offset = 0
         while (true) {
             HttpResponse httpResponse = crmRequest("""<request point="315">
     <reconciliation 
     begin="${dateFrom.present ? dateFormatter.format(dateFrom.get().toInstant()) : "2020-01-01T00:00:00+0300"}" 
     end="${dateFormatter.format(ZonedDateTime.now())}" 
     payments="1" 
-    offset="${offset * 1000}"/>
+    offset="${(offset * 1000) + 1}"/>
 </request>""")
             def response = xmlSlurper.parseText(httpResponse.body)
             if (response.result.@count.toInteger() > 0) {
