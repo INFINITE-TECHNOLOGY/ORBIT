@@ -85,7 +85,7 @@ class HistoryService extends CrmServiceBase {
         downloadHistory()
         List<ReconciliationRecord> reconciliationRecordList = reconciliationRecordRepository.findByUserGuid(userGuid)
         if (tranCount.present) {
-            return reconciliationRecordList.collect { convertToHistoryRecord(it) }[0..new Integer(tranCount.get())].reverse()
+            return reconciliationRecordList.collect { convertToHistoryRecord(it) }[0..new Integer(tranCount.get()) - 1].reverse()
         } else {
             return reconciliationRecordList.collect { convertToHistoryRecord(it) }.reverse()
         }
