@@ -28,13 +28,21 @@ class HistoryService extends CrmServiceBase {
     @PostConstruct
     void downloadHistory() {
         Optional<Date> dateFrom = reconciliationRecordRepository.lastDownloadDate()
-        HttpResponse httpResponse = crmRequest("""<request point="315">
+        Integer resultCount = 0
+        Integer page = 1
+        while (resultCount == 0) {
+            HttpResponse httpResponse = crmRequest("""<request point="315">
     <reconciliation 
     begin="${dateFrom.present ? dateFormatter.format(dateFrom.get().toInstant()) : "2020-01-01T00:00:00+0300"}" 
     end="${dateFormatter.format(ZonedDateTime.now())}" 
     payments="1" 
-    offset="1"/>
+    offset="$page"/>
 </request>""")
+            def xmlResponse = xmlSlurper.parse(httpResponse.body)
+            resultCount = xmlResponse.response.result.@count
+            page++
+            log.debug(">>>>>>>$resultCount")
+        }
     }
 
     Set<HistoryRecord> getHistory(String userGuid, Optional<String> tranCount) {
