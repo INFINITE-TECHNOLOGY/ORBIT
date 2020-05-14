@@ -40,7 +40,7 @@ class HistoryService extends CrmServiceBase {
     payments="1" 
     offset="$page"/>
 </request>""")
-            def xmlResponse = xmlSlurper.parse(httpResponse.body)
+            def xmlResponse = xmlSlurper.parseText(httpResponse.body)
             resultCount = xmlResponse.response.result.@count
             page++
             log.debug(">>>>>>>$resultCount")
