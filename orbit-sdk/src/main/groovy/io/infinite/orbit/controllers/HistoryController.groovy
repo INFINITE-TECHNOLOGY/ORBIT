@@ -22,7 +22,7 @@ class HistoryController {
     @Autowired
     HistoryService historyService
 
-    @GetMapping(value = "/secured/user/{phone}/history")
+    @GetMapping(value = "/secured/history/{phone}")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
