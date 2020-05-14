@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 
 import javax.annotation.PostConstruct
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -33,7 +34,7 @@ class HistoryService extends CrmServiceBase {
         Optional<Date> dateFrom = reconciliationRecordRepository.lastDownloadDate()
         Integer resultCount = 0
         Integer page = 1
-        while (resultCount == 0) {
+        while (resultCount != 0) {
             HttpResponse httpResponse = crmRequest("""<request point="315">
     <reconciliation 
     begin="${dateFrom.present ? dateFormatter.format(dateFrom.get().toInstant()) : "2020-01-01T00:00:00+0300"}" 
@@ -53,7 +54,7 @@ class HistoryService extends CrmServiceBase {
     ReconciliationRecord convert(def xmlRecord) {
         return new ReconciliationRecord(
                 crmId: xmlRecord.@id,
-                date: xmlRecord.@date,
+                date: LocalDate.parse(xmlRecord.@date, dateFormatter).toDate(),
                 state: xmlRecord.@state,
                 substate: xmlRecord.@substate,
                 code: xmlRecord.@code,
