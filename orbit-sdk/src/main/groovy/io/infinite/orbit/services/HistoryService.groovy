@@ -1,5 +1,6 @@
 package io.infinite.orbit.services
 
+import groovy.transform.CompileDynamic
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
@@ -26,6 +27,7 @@ class HistoryService extends CrmServiceBase {
     XmlSlurper xmlSlurper = new XmlSlurper()
 
     @PostConstruct
+    @CompileDynamic
     void downloadHistory() {
         Optional<Date> dateFrom = reconciliationRecordRepository.lastDownloadDate()
         Integer resultCount = 0
