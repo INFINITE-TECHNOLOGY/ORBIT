@@ -8,6 +8,7 @@ import io.infinite.http.HttpResponse
 import io.infinite.orbit.entities.ReconciliationRecord
 import io.infinite.orbit.model.HistoryRecord
 import io.infinite.orbit.repositories.ReconciliationRecordRepository
+import org.apache.commons.lang3.time.FastDateFormat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 
@@ -26,6 +27,8 @@ class HistoryService extends CrmServiceBase {
 
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ")
 
+    FastDateFormat fastDateFormat = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ssZ")
+
     XmlSlurper xmlSlurper = new XmlSlurper()
 
     void downloadHistory() {
@@ -34,7 +37,7 @@ class HistoryService extends CrmServiceBase {
         while (true) {
             HttpResponse httpResponse = crmRequest("""<request point="315">
     <reconciliation 
-    begin="${dateFrom.present ? dateFormatter.format(dateFrom.get().toInstant()) : "2020-01-01T00:00:00+0300"}" 
+    begin="${dateFrom.present ? fastDateFormat.format(dateFrom) : "2020-01-01T00:00:00+0300"}" 
     end="${dateFormatter.format(ZonedDateTime.now())}" 
     payments="1" 
     offset="${(offset * 1000) + 1}"/>
@@ -52,7 +55,7 @@ class HistoryService extends CrmServiceBase {
     ReconciliationRecord convertToReconciliationRecord(def xmlRecord) {
         return new ReconciliationRecord(
                 crmId: xmlRecord.@id,
-                date: LocalDate.parse(xmlRecord.@date.toString(), dateFormatter).toDate(),
+                date: fastDateFormat.parse(xmlRecord.@date.toString()),
                 state: xmlRecord.@state,
                 substate: xmlRecord.@substate,
                 code: xmlRecord.@code,
