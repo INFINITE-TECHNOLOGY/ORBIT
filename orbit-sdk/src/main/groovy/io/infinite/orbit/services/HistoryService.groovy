@@ -80,7 +80,7 @@ class HistoryService extends CrmServiceBase {
 
     Set<HistoryRecord> getHistory(String userGuid, Optional<String> tranCount) {
         downloadHistory()
-        return reconciliationRecordRepository.findAll().collect { convertToHistoryRecord(it) }
+        return reconciliationRecordRepository.findAll().collect { convertToHistoryRecord(it) }.sort { a, b -> a.date <=> b.date }[0..tranCount]
     }
 
 }
