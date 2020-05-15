@@ -24,7 +24,7 @@ class ReconciliationRecord {
     String code
     String crmFinal
     String trans
-    String sum
+    BigDecimal sum
     String service
     String market
     String dealer
