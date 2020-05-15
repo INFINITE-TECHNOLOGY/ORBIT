@@ -13,8 +13,8 @@ import org.apache.commons.lang3.time.FastDateFormat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
+import java.time.Duration
+import java.time.Instant
 
 @Controller
 @BlackBox(level = CarburetorLevel.METHOD)
@@ -24,8 +24,6 @@ class HistoryService extends CrmServiceBase {
 
     @Autowired
     ReconciliationRecordRepository reconciliationRecordRepository
-
-    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ")
 
     FastDateFormat fastDateFormat = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ssZ")
 
@@ -37,8 +35,8 @@ class HistoryService extends CrmServiceBase {
         while (true) {
             HttpResponse httpResponse = crmRequest("""<request point="315">
     <reconciliation 
-    begin="${dateFrom.present ? fastDateFormat.format(dateFrom.get()) : "2020-01-01T00:00:00+0300"}" 
-    end="${dateFormatter.format(ZonedDateTime.now())}" 
+    begin="${dateFrom.present ? fastDateFormat.format(dateFrom.get()) : "2020-01-01T00:00:00+0000"}" 
+    end="${fastDateFormat.format((Instant.now() + Duration.ofDays(1)).toDate())}" 
     payments="1" 
     offset="${(offset * 1000) + 1}"/>
 </request>""")
@@ -59,13 +57,14 @@ class HistoryService extends CrmServiceBase {
     ReconciliationRecord convertToReconciliationRecord(def xmlRecord) {
         return new ReconciliationRecord(
                 crmId: xmlRecord.@id,
-                date: fastDateFormat.parse(xmlRecord.@date.toString()).toInstant().toDate(),
+                dateLocal: fastDateFormat.parse(xmlRecord.@dateLocal.toString()),
+                dateUtc: fastDateFormat.parse(xmlRecord.@dateLocal.toString()).toInstant().toDate(),
                 state: xmlRecord.@state,
                 substate: xmlRecord.@substate,
                 code: xmlRecord.@code,
                 crmFinal: xmlRecord.@final,
                 trans: xmlRecord.@trans,
-                sum: xmlRecord.@sum.toBigDecimal()/100,
+                sum: xmlRecord.@sum.toBigDecimal() / 100,
                 service: xmlRecord.@service,
                 market: xmlRecord.@market,
                 dealer: xmlRecord.@dealer,
@@ -79,7 +78,7 @@ class HistoryService extends CrmServiceBase {
 
     HistoryRecord convertToHistoryRecord(ReconciliationRecord reconciliationRecord) {
         return new HistoryRecord(
-                date: reconciliationRecord.date,
+                date: reconciliationRecord.dateLocal,
                 amount: reconciliationRecord.sum,
                 currency: "USD"
         )

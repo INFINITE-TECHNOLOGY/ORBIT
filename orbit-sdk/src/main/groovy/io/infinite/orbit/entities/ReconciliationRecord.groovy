@@ -18,7 +18,8 @@ class ReconciliationRecord {
     Date downloadDate = new Date()
 
     String crmId
-    Date date
+    Date dateLocal
+    Date dateUtc
     String state
     String substate
     String code
