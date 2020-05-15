@@ -43,9 +43,13 @@ class HistoryService extends CrmServiceBase {
     offset="${(offset * 1000) + 1}"/>
 </request>""")
             def response = xmlSlurper.parseText(httpResponse.body)
-            if (response.result.@count.toInteger() == 1000) {
+            if (response.result.@count.toInteger() != 0) {
                 reconciliationRecordRepository.saveAll(response.result.payment.collect { convertToReconciliationRecord(it) })
-                offset++
+                if (response.result.@count.toInteger() == 1000) {
+                    offset++
+                } else {
+                    break
+                }
             } else {
                 break
             }
