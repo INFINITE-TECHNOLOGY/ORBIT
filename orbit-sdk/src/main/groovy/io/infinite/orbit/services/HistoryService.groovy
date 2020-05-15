@@ -76,7 +76,7 @@ class HistoryService extends CrmServiceBase {
     HistoryRecord convertToHistoryRecord(ReconciliationRecord reconciliationRecord) {
         return new HistoryRecord(
                 date: reconciliationRecord.date,
-                amount: Long.valueOf(reconciliationRecord.sum),
+                amount: reconciliationRecord.sum,
                 currency: "USD"
         )
     }

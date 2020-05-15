@@ -9,7 +9,7 @@ class HistoryRecord {
     @JsonFormat(timezone = "UTC", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     Date date
 
-    Long amount
+    BigDecimal amount
 
     String currency
 
