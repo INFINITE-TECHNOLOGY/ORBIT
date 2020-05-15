@@ -59,7 +59,7 @@ class HistoryService extends CrmServiceBase {
     ReconciliationRecord convertToReconciliationRecord(def xmlRecord) {
         return new ReconciliationRecord(
                 crmId: xmlRecord.@id,
-                dateLocal: fastDateFormat.parse(xmlRecord.@date.toString()[0..-6]),
+                dateLocal: fastDateFormatLocal.parse(xmlRecord.@date.toString()[0..-6]),
                 dateUtc: fastDateFormat.parse(xmlRecord.@date.toString()),
                 state: xmlRecord.@state,
                 substate: xmlRecord.@substate,
