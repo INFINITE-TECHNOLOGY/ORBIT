@@ -27,6 +27,8 @@ class HistoryService extends CrmServiceBase {
 
     FastDateFormat fastDateFormat = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ssZ")
 
+    FastDateFormat fastDateFormatLocal = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss")
+
     XmlSlurper xmlSlurper = new XmlSlurper()
 
     void downloadHistory() {
