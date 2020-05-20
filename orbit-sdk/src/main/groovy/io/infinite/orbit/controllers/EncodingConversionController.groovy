@@ -23,11 +23,11 @@ class EncodingConversionController {
     @Autowired
     EncodingConversionService encodingConversionService
 
-    @PostMapping(value = "/public/fileEncoding")
+    @PostMapping(value = "/public/encodingConversion")
     @ResponseBody
     @CrossOrigin
     @CompileDynamic
-    void ebcdicFile(@RequestParam("file") MultipartFile multipartFile
+    void convertEncoding(@RequestParam("file") MultipartFile multipartFile
                     , HttpServletResponse httpServletResponse
                     , @RequestParam(value = "fromCharsetName") String fromCharsetName
                     , @RequestParam(value = "toCharsetName") String toCharsetName
