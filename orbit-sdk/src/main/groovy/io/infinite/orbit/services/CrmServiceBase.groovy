@@ -47,7 +47,7 @@ class CrmServiceBase {
     }
 
     PrivateKey getPrivateKey() throws Exception {
-        if (System.getenv("crmPrivateKey") != null) {
+        if (![null, ""].contains(System.getenv("crmPrivateKey"))) {
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(System.getenv("crmPrivateKey").decodeBase64())
             KeyFactory kf = KeyFactory.getInstance("RSA")
             return kf.generatePrivate(spec)
