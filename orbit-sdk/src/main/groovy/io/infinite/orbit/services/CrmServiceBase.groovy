@@ -1,6 +1,8 @@
 package io.infinite.orbit.services
 
-
+import groovy.util.logging.Slf4j
+import io.infinite.blackbox.BlackBox
+import io.infinite.carburetor.CarburetorLevel
 import io.infinite.http.HttpRequest
 import io.infinite.http.HttpResponse
 import io.infinite.http.SenderDefaultHttps
@@ -12,6 +14,8 @@ import java.security.PrivateKey
 import java.security.Signature
 import java.security.spec.PKCS8EncodedKeySpec
 
+@BlackBox(level = CarburetorLevel.METHOD)
+@Slf4j
 class CrmServiceBase {
 
     SenderDefaultHttps senderDefaultHttps = new SenderDefaultHttps()
@@ -47,6 +51,7 @@ class CrmServiceBase {
     }
 
     PrivateKey getPrivateKey() throws Exception {
+        log.debug(System.getenv("crmPrivateKey"))
         if (![null, ""].contains(System.getenv("crmPrivateKey"))) {
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(System.getenv("crmPrivateKey").decodeBase64())
             KeyFactory kf = KeyFactory.getInstance("RSA")
