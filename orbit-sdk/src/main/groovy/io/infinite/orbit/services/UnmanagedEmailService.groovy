@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service
 class UnmanagedEmailService {
 
     void unmanagedEmail(UnmanagedEmail unmanagedEmail) {
-        Email from = new Email(System.getenv("GMAIL_USERNAME"))
+        Email from = new Email(System.getenv("emailFrom"))
         String subject = unmanagedEmail.subject
         Email to = new Email(unmanagedEmail.to)
         Content content = new Content("text/plain", unmanagedEmail.text)
