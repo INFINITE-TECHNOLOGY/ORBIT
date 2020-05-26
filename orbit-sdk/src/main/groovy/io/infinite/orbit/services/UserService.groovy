@@ -18,13 +18,40 @@ class UserService {
     @Autowired
     UserRepository userRepository
 
-    User createUser(String phone) {
+    User createUserByPhone(String phone) {
         try {
             return userRepository.saveAndFlush(new User(
                     phone: phone
             ))
         } catch (Exception exception) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User error", exception)
+        }
+    }
+
+    User createUserByEmail(String email) {
+        try {
+            return userRepository.saveAndFlush(new User(
+                    email: email
+            ))
+        } catch (Exception exception) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User error", exception)
+        }
+    }
+
+    User findByEmail(String email) {
+        try {
+            Set<User> users = userRepository.findByEmail(email)
+            if (users.empty) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND)
+            }
+            if (users.size() > 1) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Duplicate email")
+            }
+            return users.first()
+        } catch (ResponseStatusException responseStatusException) {
+            throw responseStatusException
+        } catch (Exception exception) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User search error", exception)
         }
     }
 

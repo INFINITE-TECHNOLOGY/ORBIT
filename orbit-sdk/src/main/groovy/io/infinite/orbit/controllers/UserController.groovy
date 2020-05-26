@@ -30,7 +30,7 @@ class UserController {
         userService.validateGuid(guid)
     }
 
-    @GetMapping(value = "/secured/user/{phone}")
+    @GetMapping(value = "/secured/user/phone/{phone}")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
@@ -38,12 +38,28 @@ class UserController {
         return userService.findByPhone(phone)
     }
 
-    @PostMapping(value = "/secured/user/{phone}")
+    @PostMapping(value = "/secured/user/phone/{phone}")
     @ResponseBody
     @CompileDynamic
     @CrossOrigin
-    User createUser(@PathVariable("phone") String phone) {
-        return userService.createUser(phone)
+    User createUserByPhone(@PathVariable("phone") String phone) {
+        return userService.createUserByPhone(phone)
+    }
+
+    @GetMapping(value = "/secured/user/email/{email}")
+    @ResponseBody
+    @CompileDynamic
+    @CrossOrigin
+    User findByEmail(@PathVariable("email") String email) {
+        return userService.findByEmail(email)
+    }
+
+    @PostMapping(value = "/secured/user/email/{email}")
+    @ResponseBody
+    @CompileDynamic
+    @CrossOrigin
+    User createUserByEmail(@PathVariable("email") String email) {
+        return userService.createUserByEmail(email)
     }
 
     @GetMapping(value = "/secured/admin/users")

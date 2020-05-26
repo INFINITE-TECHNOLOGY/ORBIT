@@ -20,6 +20,8 @@ class User {
 
     String phone
 
+    String email
+
     @JsonFormat(timezone = "UTC", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     Date creationDate = new Date()
 

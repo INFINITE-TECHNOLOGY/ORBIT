@@ -10,6 +10,8 @@ interface UserRepository extends JpaRepository<User, Long> {
 
     Set<User> findByPhone(String phone)
 
+    Set<User> findByEmail(String email)
+
     Optional<User> findByGuid(UUID guid)
 
 }
